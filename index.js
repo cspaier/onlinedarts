@@ -141,6 +141,9 @@ io.on('connection', function(socket){
   });
 
   socket.on('cancel-volee', function(){
+    if (game.volees.length == 0) {
+      return false
+    }
     volee = game.volees.pop()
     player = game.players.find(p => p.name == volee.playerName)
     game.activePlayer = player
