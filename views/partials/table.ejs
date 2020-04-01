@@ -1,0 +1,39 @@
+<table id="players-table" class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <% players.forEach((player) => { %>
+        <th><%= player.name %></th>
+        <% }); %>
+        <% if (game_state == 2) { %>
+        <th class="game-state-2">Simple</th>
+        <th class="game-state-2">Double</th>
+        <th class="game-state-2">Triple</th>
+        <% } %>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i < 8; i++) {%>
+      <tr>
+        <th scopre="row">
+          <%= scoresList[i] %>
+       </th>
+        <% players.forEach((player) => { %>
+          <td><%= player.scores[i] %></td>
+        <% }); %>
+        <% if (game_state == 2) { %>
+          <% if (i <7) {%>
+            <td class="game-state-2"><button class="dart-button btn btn-secondary" data-n=0 data-combo=1 data-value=<%= i %>>&nbsp;</button> </td>
+            <td class="game-state-2"><button class="dart-button btn btn-primary" data-n=0 data-combo=2 data-value=<%= i %>>&nbsp;</button> </td>
+            <% if (i <6) {%>
+              <td class="game-state-2"><button class="dart-button btn btn-danger" data-n=0 data-combo=3 data-value=<%= i %>>&nbsp;</button> </td>
+            <% } %>
+          <% } %>
+        <% } %>
+
+
+      </tr>
+    <% }; %>
+
+  </tbody>
+</table>

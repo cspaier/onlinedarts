@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Onlinedarts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <div class=container-fluid>
+      <div class="col-md-6">
+        <%- include('partials/table'); %>
+
+        <div class="game-state-0">
+          <div class="row">
+            <div class="col">
+              <form id="new-player" action="" class="form-inline">
+                <div class="form-group mb-2">
+                <input id="new-player-name" autocomplete="off" class="form-control" placeholder="nouveau joueur"/>
+                </div>
+                <button class="btn btn-primary mb-2">
+                <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+              </button>
+              </form>
+          </div>
+          <div class="col">
+            <button id="remove-player" class="btn btn-danger">
+              <span class="oi oi-minus" title="plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <button id="start-game" class="btn btn-success btn-lg ">
+            <span class="oi oi-media-play" title="plus" aria-hidden="true"></span> Commencer la partie
+          </button>
+        </div>
+      </div><!-- game-state-0 -->
+
+      <div class="game-state-2">
+        <div id="tour-preview-card" class="card">
+        <ul id="tour-preview-list" class="list-group list-group-flush"> </ul>
+        <div/>
+      </div><!-- game-state-2 -->
+
+      </div>
+      </div>
+    </div>
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="/ejs.min.js"></script>
+
+    <script type="text/javascript">
+        var table_template = <%- JSON.stringify(table_template) %>; // Get templates object
+    </script>
+
+    <script>
+    var players = "<%= players %>";
+    var scoresList = [ 20, 19, 18, 17, 16, 15, 'B', 'S'];
+    // game state:
+    // 0: setting players
+    // 1: waiting for players approvals
+    // 2: playing
+    // 3: game finished
+    var game_state = "<%= game_state %>";
+    // tour est une liste de longueur <= 3
+    // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
+    var tour = []
+
+    var refreshForGameState = function(){
+      // On cache/affiche les élèments en fonction du game_state
+      if (game_state == 0){
+        $('.game-state-0').show();
+        $('.game-state-1').hide();
+        $('.game-state-2').hide();
+        $('.game-state-3').hide();
+
+      }
+      else if (game_state == 2) {
+        $('.game-state-0').hide();
+        $('.game-state-1').hide();
+        $('.game-state-2').show();
+        $('.game-state-3').hide();
+
+      }
+      else if (game_state == 3) {
+        $('.game-state-0').hide();
+        $('.game-state-1').hide();
+        $('.game-state-2').hide();
+        $('.game-state-3').show();
+      }
+    }
+
+    var refresPlayersTable = function(){
+      //recharge le tableau principal avec les nouvelles données
+        var html = ejs.render(table_template, { players: players, scoresList: scoresList, game_state: game_state });
+        $('#players-table').html(html);
+    }
+    var jouerTour = function(tour){
+
+    }
+
+    var updateTourPreview = function(tour){
+      var html = ""
+      tour.forEach((lance) => {
+          html += '<li class="list-group-item">' + lance.combo + ' x ' + scoresList[lance.numeroTape] + '</li>'
+      });
+      $('#tour-preview-list').html(html)
+      // Si le tour à plus de 3 lancés, on ajoute la classe warning
+      if (tour.length > 3){
+        $('#tour-preview-card').addClass("border-warning")
+      }
+      else{
+        $('#tour-preview-card').removeClass("border-warning")
+        if (tour.length >0){
+          $('#tour-preview-card').addClass("border-success")
+        }
+      }
+
+    }
+
+    $(function () {
+      refreshForGameState();
+      var socket = io();
+
+      $('.dart-button').click(function(){
+        // le nombre initial de fois qu'il a tapé la zone dans ce tour
+        var n_initial = $(this).data("n")
+        // le numéro tapé
+        var numeroTape = $(this).data("value")
+        // simple? double? triple!
+        var combo = $(this).data("combo")
+        var lance = {numeroTape: numeroTape, combo: combo}
+        // si il a déja tapé 3 fois le machin, on remet à 0
+        if (n_initial == 3){
+          $(this).html("&nbsp;")
+          $(this).data("n", 0)
+          // enlève tous les numeroTapexcombo du tour
+          tour = tour.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
+          updateTourPreview(tour)
+          return false
+        }
+
+        tour.push(lance)
+        //var n = Math.min(n_initial + combo,3)
+        $(this).data("n", n_initial +1)
+        $(this).html(n_initial +1)
+        updateTourPreview(tour)
+
+      });
+
+      $('#new-player').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('new-player', $('#new-player-name').val());
+        $('#new-player-name').val('');
+        return false;
+      });
+
+      $('#remove-player').click(function(e){
+        socket.emit('remove-player');
+        return false;
+      });
+
+      $('#start-game').click(function(e){
+        socket.emit('start-game');
+        return false;
+      });
+
+      socket.on('change-players', function(new_players){
+        players = new_players;
+        refresPlayersTable()
+      });
+
+      socket.on('change-game-state', function(new_game_state){
+        game_state = new_game_state;
+        refresPlayersTable()
+        refreshForGameState()
+      });
+
+    });
+  </script>
+  </body>
+</html>

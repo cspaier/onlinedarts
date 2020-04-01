@@ -1,0 +1,13 @@
+{
+  "name": "darts-online",
+  "version": "0.0.1",
+  "description": "playing darts online with your friends",
+  "dependencies": {
+    "ejs": "3.0.2",
+    "express": "4.15.2",
+    "socket.io": "2.3.0",
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
