@@ -101,6 +101,7 @@
 
     var refresPlayersTable = function(){
       //recharge le tableau principal avec les nouvelles données
+      console.log(players)
         var html = ejs.render(table_template, { players: players, scoresList: scoresList, game_state: game_state });
         $('#players-table').html(html);
     }
@@ -127,22 +128,19 @@
 
     }
 
-    $(function () {
-      refreshForGameState();
-      var socket = io();
-
-      $('.dart-button').click(function(){
+var DartButtonsclick = function(el){
+        console.log("here")
         // le nombre initial de fois qu'il a tapé la zone dans ce tour
-        var n_initial = $(this).data("n")
+        var n_initial = $(el).data("n")
         // le numéro tapé
-        var numeroTape = $(this).data("value")
+        var numeroTape = $(el).data("value")
         // simple? double? triple!
-        var combo = $(this).data("combo")
+        var combo = $(el).data("combo")
         var lance = {numeroTape: numeroTape, combo: combo}
         // si il a déja tapé 3 fois le machin, on remet à 0
         if (n_initial == 3){
-          $(this).html("&nbsp;")
-          $(this).data("n", 0)
+          $(el).html("&nbsp;")
+          $(el).data("n", 0)
           // enlève tous les numeroTapexcombo du tour
           tour = tour.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
           updateTourPreview(tour)
@@ -151,11 +149,16 @@
 
         tour.push(lance)
         //var n = Math.min(n_initial + combo,3)
-        $(this).data("n", n_initial +1)
-        $(this).html(n_initial +1)
+        $(el).data("n", n_initial +1)
+        $(el).html(n_initial +1)
         updateTourPreview(tour)
 
-      });
+      };
+
+    $(function () {
+      refreshForGameState();
+      var socket = io();
+
 
       $('#new-player').submit(function(e){
         e.preventDefault(); // prevents page reloading
