@@ -16,10 +16,20 @@ var scoresList = [ 20, 19, 18, 17, 16, 15, 'B', 'S'];
 var game_state = 0;
 // get table template as string:
 fs = require('fs'),
-table_template = fs.readFileSync(__dirname + '/views/partials/table.ejs', 'utf-8'),
+table_template = fs.readFileSync(__dirname + '/views/partials/table.ejs', 'utf-8')
+// dart ={numeroTape: numeroTape, combo: combo}
+// volee = [{player: name, volee: [darts]]
+var volees = []
 
+var game = {
+  game_state: 0,
+  players: players,
+  volees: [],
+  activePlayer: "",
+  scoresList: [ 20, 19, 18, 17, 16, 15, 'B', 'S'],
+}
 
-createPlayer = function(name){
+var createPlayer = function(name){
   // test if we already have a player with this name
   if(players.some(e => e.name == name)) {
     return false;

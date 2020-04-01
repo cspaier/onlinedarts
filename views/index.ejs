@@ -43,14 +43,15 @@
       <div class="game-state-2">
         <div class="row">
           <div class="col-2">
-            <div id="tour-preview-card" class="card">
+            <div id="volee-preview-card" class="card">
               <div class="card-header">Volée</div>
-              <ul id="tour-preview-list" class="list-group list-group-flush">
+              <ul id="volee-preview-list" class="list-group list-group-flush">
                 <li class="list-group-item">Zob!</li>
               </ul>
             </div>
           </div>
           <div class="col">
+            <button id="valide-volee"/>
           </div>
         </div>
 
@@ -81,9 +82,9 @@
     // 2: playing
     // 3: game finished
     var game_state = "<%= game_state %>";
-    // tour est une liste de longueur <= 3
+    // volle est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
-    var tour = []
+    var volee = []
 
     var refreshForGameState = function(){
       // On cache/affiche les élèments en fonction du game_state
@@ -115,27 +116,27 @@
         var html = ejs.render(table_template, { players: players, scoresList: scoresList, game_state: game_state });
         $('#players-table').html(html);
     }
-    var jouerTour = function(tour){
+    var jouervolee = function(volee){
 
     }
 
-    var updateTourPreview = function(tour){
+    var updateVoleePreview = function(volee){
       var html = ""
-      tour.forEach((lance) => {
-          html += '<li class="list-group-item">' + lance.combo + ' x ' + scoresList[lance.numeroTape] + '</li>'
+      volee.forEach((dart) => {
+          html += '<li class="list-group-item">' + dart.combo + ' x ' + scoresList[dart.numeroTape] + '</li>'
       });
       if (html == ""){
         html = '<li class="list-group-item">Zob!</li>'
       }
-      $('#tour-preview-list').html(html)
-      // Si le tour à plus de 3 lancés, on ajoute la classe warning
-      if (tour.length > 3){
-        $('#tour-preview-card').addClass("border-warning")
+      $('#volee-preview-list').html(html)
+      // Si la volee à plus de 3 lancés, on ajoute la classe warning
+      if (volee.length > 3){
+        $('#volee-preview-card').addClass("border-warning")
       }
       else{
-        $('#tour-preview-card').removeClass("border-warning")
-        if (tour.length >0){
-          $('#tour-preview-card').addClass("border-success")
+        $('#volee-preview-card').removeClass("border-warning")
+        if (volee.length >0){
+          $('#volee-preview-card').addClass("border-success")
         }
       }
 
@@ -143,28 +144,28 @@
 
 var DartButtonsclick = function(el){
         console.log("here")
-        // le nombre initial de fois qu'il a tapé la zone dans ce tour
+        // le nombre initial de fois qu'il a tapé la zone dans ce volee
         var n_initial = $(el).data("n")
         // le numéro tapé
         var numeroTape = $(el).data("value")
         // simple? double? triple!
         var combo = $(el).data("combo")
-        var lance = {numeroTape: numeroTape, combo: combo}
+        var dart = {numeroTape: numeroTape, combo: combo}
         // si il a déja tapé 3 fois le machin, on remet à 0
         if (n_initial == 3){
           $(el).html("&nbsp;")
           $(el).data("n", 0)
-          // enlève tous les numeroTapexcombo du tour
-          tour = tour.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
-          updateTourPreview(tour)
+          // enlève tous les numeroTapexcombo du volee
+          volee = volee.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
+          updateVoleePreview(volee)
           return false
         }
 
-        tour.push(lance)
+        volee.push(dart)
         //var n = Math.min(n_initial + combo,3)
         $(el).data("n", n_initial +1)
         $(el).html(n_initial +1)
-        updateTourPreview(tour)
+        updateVoleePreview(volee)
 
       };
 
