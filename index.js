@@ -124,8 +124,7 @@ io.on('connection', function(socket){
       return false
     }
     game.volees.push({player: game.activePlayer, volee:volee});
-    scoreVolee(volee);
-    console.log(game.volees)
+    scoreVolee(volee)
     game.activePlayer = getNextPlayer(game.activePlayer)
     io.emit('update-game', game);
   });
