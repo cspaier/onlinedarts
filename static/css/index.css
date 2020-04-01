@@ -4,6 +4,15 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 
 #volees{
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 150px;
+}
+
+#players-table{
+  font-size:250%;
+  text-align: center;
+}
+.dart-button{
+  width:80%;
+ font-size: 1.5rem;
 }
