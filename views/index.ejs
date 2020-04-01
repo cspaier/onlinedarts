@@ -6,6 +6,8 @@
     <title>Onlinedarts</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
+
 
   </head>
 
@@ -56,6 +58,10 @@
               <span class="oi oi-check" title="plus" aria-hidden="true"></span> Valider
             </button>
           </div>
+          <div class="col">
+            <ul id="volees" class="list-group"></ul>
+          </div>
+
         </div>
 
       </div><!-- game-state-2 -->
@@ -124,6 +130,19 @@
         $('#active-player-name').html(game.activePlayer.name);
       }
     }
+
+  var refreshVolees = function(){
+    var html = ""
+    game.volees.forEach((v, i) => {
+      var round = i + 1
+      html += '<li class="list-group-item">' + round + '. ' + v.player.name + ': ';
+        v.volee.forEach((dart) => {
+          html += dart.combo + ' x ' + game.scoresList[dart.numeroTape] + ' '
+        });
+        html +='</li>'
+    });
+    $('#volees').html(html)
+  }
 
 
     var updateVoleePreview = function(volee){
@@ -225,6 +244,7 @@ var DartButtonsclick = function(el){
         game = game_from_server;
         refresPlayersTable()
         refreshForGameState()
+        refreshVolees()
       });
 
     });
