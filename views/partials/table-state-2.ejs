@@ -1,15 +1,13 @@
 <table class="table table-bordered table-hover table-responsive">
   <thead>
     <tr>
-      <th><%= game.activePlayer.name %></th>
+      <th></th>
       <% game.players.forEach((player) => { %>
-        <th class="player-<%= player.name %>-cell <% if (player.name == game.activePlayer.name){%>info <% }%>"><%= player.name %></th>
+        <th class="player-<%= player.name %>-cell"><%= player.name %></th>
         <% }); %>
-        <% if (game.state == 2) { %>
         <th class="game-state-2">Simple</th>
         <th class="game-state-2">Double</th>
         <th class="game-state-2">Triple</th>
-        <% } %>
     </tr>
   </thead>
   <tbody>
@@ -21,19 +19,16 @@
         <% game.players.forEach((player) => { %>
           <td class="player-<%= player.name %>-cell"><%= player.scores[i] %></td>
         <% }); %>
-        <% if (game.state == 2) { %>
-          <% if (i <7) {%>
+          <% if (i < 7) { %>
             <td class="game-state-2"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-secondary" data-n=0 data-combo=1 data-value=<%= i %>>&nbsp;</button> </td>
             <td class="game-state-2"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-primary" data-n=0 data-combo=2 data-value=<%= i %>>&nbsp;</button> </td>
-            <% if (i <6) {%>
+            <% if (i < 6) { %>
               <td class="game-state-2"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-danger" data-n=0 data-combo=3 data-value=<%= i %>>&nbsp;</button> </td>
             <% } %>
           <% } %>
-        <% } %>
-
 
       </tr>
-    <% }; %>
+    <% } %>
 
   </tbody>
 </table>

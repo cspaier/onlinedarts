@@ -111,14 +111,18 @@
       //recharge le tableau principal avec les nouvelles données
       if (game.state == 0){
         template = templates.tableState0
+        var html = ejs.render(template, { game: game });
+        $('#players-table').html(html);
       }
       if (game.state == 2){
         template = templates.tableState2
-      }
-      //console.log(template)
         var html = ejs.render(template, { game: game });
         $('#players-table').html(html);
-        //$('#active-player-name').html(game.activePlayer.name);
+
+        var activePlayerName = game.activePlayer.name
+        $('.player-'+ activePlayerName + '-cell').addClass('table-active')
+        $('#active-player-name').html(game.activePlayer.name);
+      }
     }
 
 

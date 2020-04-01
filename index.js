@@ -110,7 +110,6 @@ io.on('connection', function(socket){
   socket.on('start-game', function(){
     game.activePlayer = game.players[0];
     game.state = 2;
-    console.log(game.activePlayer)
     io.emit('change-game-state', game);
   });
 
@@ -121,7 +120,6 @@ io.on('connection', function(socket){
     game.volees.push({player: game.activePlayer, volee:volee});
     scoreVolee(volee);
     game.activePlayer = getNextPlayer(game.activePlayer)
-    console.log(game.activePlayer)
     io.emit('update-game', game);
   });
 });

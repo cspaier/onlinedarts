@@ -3,7 +3,7 @@
     <tr>
       <th></th>
       <% game.players.forEach((player) => { %>
-        <th class="player-<%= player.name %>-cell"><%= player.name %></th>
+        <th><%= player.name %></th>
         <% }); %>
     </tr>
   </thead>
@@ -14,7 +14,7 @@
           <%= game.scoresList[i] %>
        </th>
         <% game.players.forEach((player) => { %>
-          <td class="player-<%= player.name %>-cell"><%= player.scores[i] %></td>
+          <td><%= player.scores[i] %></td>
         <% }); %>
 
       </tr>
