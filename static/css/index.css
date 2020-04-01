@@ -9,10 +9,15 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 
 #players-table{
-  font-size:250%;
+  font-size:240%;
   text-align: center;
 }
 .dart-button{
   width:80%;
  font-size: 1.5rem;
+}
+
+.volee-preview-card{
+  overflow-y: auto;
+  font-size: 90%;
 }

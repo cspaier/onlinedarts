@@ -90,6 +90,17 @@ var getNextPlayer = function(activePlayer){
   return nextPlayer
 }
 
+var getPreviousPlayer = function(activePlayer){
+  index = game.players.indexOf(activePlayer);
+  if(index > 0){
+   previousPlayer = game.players[index - 1]
+  }
+  else{
+   previousPlayer = game.players[game.players.length - 1]
+  }
+  return previousPlayer
+}
+
 // La vue
 app.get('/', function(req, res){
   res.render('index', {game: game, templates: templates});
@@ -123,10 +134,19 @@ io.on('connection', function(socket){
     if (game.state !== 2){
       return false
     }
-    game.volees.push({player: game.activePlayer, volee:volee});
+    game.volees.push({playerName: game.activePlayer.name, volee:volee, previousScores: JSON.parse(JSON.stringify(game.activePlayer.scores))});
     scoreVolee(volee)
     game.activePlayer = getNextPlayer(game.activePlayer)
     io.emit('update-game', game);
+  });
+
+  socket.on('cancel-volee', function(){
+    volee = game.volees.pop()
+    player = game.players.find(p => p.name == volee.playerName)
+    game.activePlayer = player
+    // attention on pop la derniere volée
+    game.activePlayer.scores = volee.previousScores
+    io.emit('update-game', game)
   });
 });
 

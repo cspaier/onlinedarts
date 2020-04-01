@@ -12,7 +12,7 @@
   </head>
 
   <body>
-    <div class=container-fluid>
+    <div class="container-fluid">
       <div class="row">
       <div class="col-md-6">
         <div id="players-table">
@@ -43,26 +43,34 @@
         </div>
       </div><!-- game-state-0 -->
 
-      <div class="game-state-2">
-        <div class="row">
+      <div class="game-state-2 row">
           <div class="col-4">
             <div id="volee-preview-card" class="card">
               <div class="card-header">Volée de <span id="active-player-name"></span></div>
               <ul id="volee-preview-list" class="list-group list-group-flush">
-                <li class="list-group-item">Zob!</li>
+                <li class="list-group-item">Fromage?</li>
               </ul>
             </div>
           </div>
           <div class="col">
-            <button class="btn btn-success" id="valide-volee">
-              <span class="oi oi-check" title="plus" aria-hidden="true"></span> Valider
-            </button>
+            <div>
+              <button class="btn btn-success btn-lg" id="valide-volee">
+                <span class="oi oi-check" title="plus" aria-hidden="true"></span> Valider
+              </button>
+              <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
+                <span class="oi oi-action-undo" title="plus" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div>
+              <button class="btn btn-warning btn-xs mt-3" id="fromage">
+                <span class="oi oi-trash" title="plus" aria-hidden="true"></span> Fromage!
+              </button>
+            </div>
           </div>
           <div class="col">
             <ul id="volees" class="list-group"></ul>
           </div>
 
-        </div>
 
       </div><!-- game-state-2 -->
 
@@ -155,7 +163,7 @@
       });
       if (html == ""){
         // volée vide!
-        html = '<li class="list-group-item">Zob!</li>'
+        html = '<li class="list-group-item">Fromage?</li>'
       }
       $('#volee-preview-list').html(html)
       // Si la volee à plus de 3 lancés, on ajoute la classe warning
@@ -230,6 +238,11 @@ var DartButtonsclick = function(el){
         return false;
       });
 
+      $('#cancel-volee').click(function(e){
+        socket.emit('cancel-volee');
+        updateVoleePreview(volee)
+        return false;
+      });
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         refresPlayersTable()
