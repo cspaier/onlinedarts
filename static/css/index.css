@@ -1,0 +1,4 @@
+button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
+  cursor: not-allowed;
+  pointer-events: all !important;
+}

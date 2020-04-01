@@ -51,7 +51,9 @@
             </div>
           </div>
           <div class="col">
-            <button id="valide-volee"/>
+            <button class="btn btn-success" id="valide-volee">
+              <span class="oi oi-check" title="plus" aria-hidden="true"></span> Valider
+            </button>
           </div>
         </div>
 
@@ -86,6 +88,8 @@
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
     var volee = []
 
+    var game ="<%= game %>";
+
     var refreshForGameState = function(){
       // On cache/affiche les élèments en fonction du game_state
       if (game_state == 0){
@@ -112,7 +116,6 @@
 
     var refresPlayersTable = function(){
       //recharge le tableau principal avec les nouvelles données
-      console.log(players)
         var html = ejs.render(table_template, { players: players, scoresList: scoresList, game_state: game_state });
         $('#players-table').html(html);
     }
@@ -132,12 +135,20 @@
       // Si la volee à plus de 3 lancés, on ajoute la classe warning
       if (volee.length > 3){
         $('#volee-preview-card').addClass("border-warning")
+          $('#valide-volee').prop("disabled", true);
+          $('#valide-volee').removeClass("btn-success")
+          $('#valide-volee').addClass("btn-secondary")
       }
       else{
         $('#volee-preview-card').removeClass("border-warning")
         if (volee.length >0){
           $('#volee-preview-card').addClass("border-success")
         }
+        $('#valide-volee').prop("disabled", false);
+        $('#valide-volee').addClass("btn-success")
+        $('#valide-volee').removeClass("btn-secondary")
+
+
       }
 
     }
@@ -188,6 +199,10 @@ var DartButtonsclick = function(el){
 
       $('#start-game').click(function(e){
         socket.emit('start-game');
+        return false;
+      });
+      $('#valide-volee').click(function(e){
+        socket.emit('valide-volle', volee);
         return false;
       });
 

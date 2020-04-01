@@ -68,6 +68,11 @@ io.on('connection', function(socket){
     game_state = 2;
     io.emit('change-game-state', game_state);
   });
+
+  socket.on('valide-volee', function(volee){
+    game_state = 2;
+    io.emit('change-game-state', game_state);
+  });
 });
 
 let port = process.env.PORT;
