@@ -6,14 +6,13 @@ app.use(express.static('static/'));
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
-var players = [];
-var scoresList = [ 20, 19, 18, 17, 16, 15, 'B', 'S'];
+
 // game state:
 // 0: setting players
 // 1: waiting for players approvals
 // 2: playing
 // 3: game finished
-var game_state = 0;
+
 // get table template as string:
 fs = require('fs'),
 table_template = fs.readFileSync(__dirname + '/views/partials/table.ejs', 'utf-8')
@@ -22,19 +21,28 @@ table_template = fs.readFileSync(__dirname + '/views/partials/table.ejs', 'utf-8
 var volees = []
 
 var game = {
-  game_state: 0,
-  players: players,
+  // game state:
+  // 0: setting players
+  // 1: waiting for players approvals
+  // 2: playing
+  // 3: game finished
+  state: 0,
+  // player = { name: name, scores: scores };
+  // where scores is a list of 8 int: 20, 19, 18, 17, 16, 15, 25, S
+  players: [],
+  // dart ={numeroTape: numeroTape, combo: combo}
+  // volee = [{player: name, volee: [darts]]
   volees: [],
-  activePlayer: "",
-  scoresList: [ 20, 19, 18, 17, 16, 15, 'B', 'S'],
+  activePlayer: null,
+  scoresList: [ 20, 19, 18, 17, 16, 15, 25, 'S'],
 }
 
 var createPlayer = function(name){
   // test if we already have a player with this name
-  if(players.some(e => e.name == name)) {
+  if(game.players.some(e => e.name == name)) {
     return false;
   }
-  // scores will be a list of 8 int: 20, 19, 18, 17, 16, 15, B, S
+  // scores will be a list of 8 int: 20, 19, 18, 17, 16, 15, 25, S
   var scores = [];
   for (var i = 0; i <= 7; i++) {
     scores.push(0);
@@ -43,35 +51,54 @@ var createPlayer = function(name){
   return player
 };
 
+var scoreVolee = function(volee){
+  volee.forEach((dart) => {
+    // on score chaque dart
+    // dart ={numeroTape: numeroTape, combo: combo}
+    n_initial = game.activePlayer.scores[dart.numeroTape]
+    n = n_initial + dart.combo
+    if (n > 3){
+        game.activePlayer.scores[7] += (n-3) * game.scoresList[dart.numeroTape]
+        n = 3
+    }
+    game.activePlayer.scores[dart.numeroTape] = n
+
+  });
+
+}
 
 app.get('/', function(req, res){
-  res.render('index', {players: players, scoresList: scoresList, table_template: table_template, game_state: game_state});
+  res.render('index', {game: game, table_template: table_template});
 });
 
 
 io.on('connection', function(socket){
+
+  // all io.emit will return game object. This way we are clear game state is always same for all clients
   socket.on('new-player', function(playerName){
     player = createPlayer(playerName);
     // createPlayer will return False if playerName is already taken
     if (player){
-      players.push(player)
+      game.players.push(player)
     }
-    io.emit('change-players', players);
+    io.emit('change-players', game);
   });
 
   socket.on('remove-player', function(playerName){
-    players.pop()
-    io.emit('change-players', players);
+    game.players.pop()
+    io.emit('change-players', game);
   });
 
   socket.on('start-game', function(){
-    game_state = 2;
-    io.emit('change-game-state', game_state);
+    game.activePlayer = game.players[0]
+    game.state = 2;
+    io.emit('change-game-state', game);
   });
 
   socket.on('valide-volee', function(volee){
-    game_state = 2;
-    io.emit('change-game-state', game_state);
+    game.volees.push({player: game.activePlayer, volee:volee})
+    scoreVolee(volee)
+    io.emit('change-game-state', game);
   });
 });
 

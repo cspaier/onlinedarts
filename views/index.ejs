@@ -76,37 +76,29 @@
     </script>
 
     <script>
-    var players = "<%= players %>";
-    var scoresList = [ 20, 19, 18, 17, 16, 15, 'B', 'S'];
-    // game state:
-    // 0: setting players
-    // 1: waiting for players approvals
-    // 2: playing
-    // 3: game finished
-    var game_state = "<%= game_state %>";
+    var game = <%- JSON.stringify(game) %>;
     // volle est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
     var volee = []
 
-    var game ="<%= game %>";
 
     var refreshForGameState = function(){
       // On cache/affiche les élèments en fonction du game_state
-      if (game_state == 0){
+      if (game.state == 0){
         $('.game-state-0').show();
         $('.game-state-1').hide();
         $('.game-state-2').hide();
         $('.game-state-3').hide();
 
       }
-      else if (game_state == 2) {
+      else if (game.state == 2) {
         $('.game-state-0').hide();
         $('.game-state-1').hide();
         $('.game-state-2').show();
         $('.game-state-3').hide();
 
       }
-      else if (game_state == 3) {
+      else if (game.state == 3) {
         $('.game-state-0').hide();
         $('.game-state-1').hide();
         $('.game-state-2').hide();
@@ -116,19 +108,19 @@
 
     var refresPlayersTable = function(){
       //recharge le tableau principal avec les nouvelles données
-        var html = ejs.render(table_template, { players: players, scoresList: scoresList, game_state: game_state });
+        var html = ejs.render(table_template, { game: game });
         $('#players-table').html(html);
     }
-    var jouervolee = function(volee){
 
-    }
 
     var updateVoleePreview = function(volee){
+      // met à jour le résumé de la volée
       var html = ""
       volee.forEach((dart) => {
-          html += '<li class="list-group-item">' + dart.combo + ' x ' + scoresList[dart.numeroTape] + '</li>'
+          html += '<li class="list-group-item">' + dart.combo + ' x ' + game.scoresList[dart.numeroTape] + '</li>'
       });
       if (html == ""){
+        // volée vide!
         html = '<li class="list-group-item">Zob!</li>'
       }
       $('#volee-preview-list').html(html)
@@ -154,7 +146,6 @@
     }
 
 var DartButtonsclick = function(el){
-        console.log("here")
         // le nombre initial de fois qu'il a tapé la zone dans ce volee
         var n_initial = $(el).data("n")
         // le numéro tapé
@@ -166,14 +157,14 @@ var DartButtonsclick = function(el){
         if (n_initial == 3){
           $(el).html("&nbsp;")
           $(el).data("n", 0)
-          // enlève tous les numeroTapexcombo du volee
+          // enlève tous les numeroTape x combo de la volee
           volee = volee.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
           updateVoleePreview(volee)
           return false
         }
 
         volee.push(dart)
-        //var n = Math.min(n_initial + combo,3)
+        // met à jour le bouton
         $(el).data("n", n_initial +1)
         $(el).html(n_initial +1)
         updateVoleePreview(volee)
@@ -202,17 +193,23 @@ var DartButtonsclick = function(el){
         return false;
       });
       $('#valide-volee').click(function(e){
-        socket.emit('valide-volle', volee);
+        socket.emit('valide-volee', volee);
         return false;
       });
 
-      socket.on('change-players', function(new_players){
-        players = new_players;
+      socket.on('change-players', function(game_from_server){
+        game = game_from_server;
         refresPlayersTable()
       });
 
-      socket.on('change-game-state', function(new_game_state){
-        game_state = new_game_state;
+      socket.on('change-game-state', function(game_from_server){
+        game = game_from_server;
+        refresPlayersTable()
+        refreshForGameState()
+      });
+
+      socket.on('update-game', function(game_from_server){
+        game = game_from_server;
         refresPlayersTable()
         refreshForGameState()
       });
