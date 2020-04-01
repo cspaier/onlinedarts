@@ -62,12 +62,18 @@ var scoreVolee = function(volee){
     n = n_initial + dart.combo
     if (n > 3){
         // on test si quelqu'un d'autre à fermé le numeroTape
-        if (!(game.players.some(p => (p.scores[dart.numeroTape] == 3) && (p !== game.activePlayer)))){
+        // la boulle à une particularité: elle ne se ferme pas à plus de deux joueurs
+        if (dart.numeroTape == 6 && game.players.length > 2){
+          // c'est une boulle et on a plus de 2 joueurs
           game.activePlayer.scores[7] += (n-3) * game.scoresList[dart.numeroTape]
+        }
+        else if (!(game.players.some(p => (p.scores[dart.numeroTape] == 3) && (p !== game.activePlayer)))){
+            game.activePlayer.scores[7] += (n-3) * game.scoresList[dart.numeroTape]
         }
         n = 3
     }
     game.activePlayer.scores[dart.numeroTape] = n
+    // test if game is over
 
   });
 
@@ -119,6 +125,7 @@ io.on('connection', function(socket){
     }
     game.volees.push({player: game.activePlayer, volee:volee});
     scoreVolee(volee);
+    console.log(game.volees)
     game.activePlayer = getNextPlayer(game.activePlayer)
     io.emit('update-game', game);
   });
