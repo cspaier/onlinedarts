@@ -41,9 +41,19 @@
       </div><!-- game-state-0 -->
 
       <div class="game-state-2">
-        <div id="tour-preview-card" class="card">
-        <ul id="tour-preview-list" class="list-group list-group-flush"> </ul>
-        <div/>
+        <div class="row">
+          <div class="col-2">
+            <div id="tour-preview-card" class="card">
+              <div class="card-header">Volée</div>
+              <ul id="tour-preview-list" class="list-group list-group-flush">
+                <li class="list-group-item">Zob!</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col">
+          </div>
+        </div>
+
       </div><!-- game-state-2 -->
 
       </div>
@@ -114,6 +124,9 @@
       tour.forEach((lance) => {
           html += '<li class="list-group-item">' + lance.combo + ' x ' + scoresList[lance.numeroTape] + '</li>'
       });
+      if (html == ""){
+        html = '<li class="list-group-item">Zob!</li>'
+      }
       $('#tour-preview-list').html(html)
       // Si le tour à plus de 3 lancés, on ajoute la classe warning
       if (tour.length > 3){
