@@ -14,8 +14,11 @@ app.set('view engine', 'ejs');
 // 3: game finished
 
 // get table template as string:
-fs = require('fs'),
-table_template = fs.readFileSync(__dirname + '/views/partials/table.ejs', 'utf-8')
+fs = require('fs')
+templates = {
+  tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
+  tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8')
+}
 // dart ={numeroTape: numeroTape, combo: combo}
 // volee = [{player: name, volee: [darts]]
 var volees = []
@@ -58,7 +61,10 @@ var scoreVolee = function(volee){
     n_initial = game.activePlayer.scores[dart.numeroTape]
     n = n_initial + dart.combo
     if (n > 3){
-        game.activePlayer.scores[7] += (n-3) * game.scoresList[dart.numeroTape]
+        // on test si quelqu'un d'autre à fermé le numeroTape
+        if (!(game.players.some(p => (p.scores[dart.numeroTape] == 3) && (p !== game.activePlayer)))){
+          game.activePlayer.scores[7] += (n-3) * game.scoresList[dart.numeroTape]
+        }
         n = 3
     }
     game.activePlayer.scores[dart.numeroTape] = n
@@ -67,13 +73,25 @@ var scoreVolee = function(volee){
 
 }
 
+var getNextPlayer = function(activePlayer){
+  index = game.players.indexOf(activePlayer);
+  if(index >= 0 && index < game.players.length - 1){
+   nextPlayer = game.players[index + 1]
+  }
+  else{
+   nextPlayer = game.players[0]
+  }
+  return nextPlayer
+}
+
+// La vue
 app.get('/', function(req, res){
-  res.render('index', {game: game, table_template: table_template});
+  res.render('index', {game: game, templates: templates});
 });
 
 
 io.on('connection', function(socket){
-
+  io.emit('update-game', game);
   // all io.emit will return game object. This way we are clear game state is always same for all clients
   socket.on('new-player', function(playerName){
     player = createPlayer(playerName);
@@ -90,15 +108,21 @@ io.on('connection', function(socket){
   });
 
   socket.on('start-game', function(){
-    game.activePlayer = game.players[0]
+    game.activePlayer = game.players[0];
     game.state = 2;
+    console.log(game.activePlayer)
     io.emit('change-game-state', game);
   });
 
   socket.on('valide-volee', function(volee){
-    game.volees.push({player: game.activePlayer, volee:volee})
-    scoreVolee(volee)
-    io.emit('change-game-state', game);
+    if (game.state !== 2){
+      return false
+    }
+    game.volees.push({player: game.activePlayer, volee:volee});
+    scoreVolee(volee);
+    game.activePlayer = getNextPlayer(game.activePlayer)
+    console.log(game.activePlayer)
+    io.emit('update-game', game);
   });
 });
 

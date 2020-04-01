@@ -1,9 +1,9 @@
-<table id="players-table" class="table">
+<table class="table table-bordered table-hover table-responsive">
   <thead>
     <tr>
-      <th></th>
+      <th><%= game.activePlayer.name %></th>
       <% game.players.forEach((player) => { %>
-        <th><%= player.name %></th>
+        <th class="player-<%= player.name %>-cell <% if (player.name == game.activePlayer.name){%>info <% }%>"><%= player.name %></th>
         <% }); %>
         <% if (game.state == 2) { %>
         <th class="game-state-2">Simple</th>
@@ -19,7 +19,7 @@
           <%= game.scoresList[i] %>
        </th>
         <% game.players.forEach((player) => { %>
-          <td><%= player.scores[i] %></td>
+          <td class="player-<%= player.name %>-cell"><%= player.scores[i] %></td>
         <% }); %>
         <% if (game.state == 2) { %>
           <% if (i <7) {%>

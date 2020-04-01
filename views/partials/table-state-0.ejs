@@ -1,0 +1,24 @@
+<table class="table table-bordered table-hover table-responsive">
+  <thead>
+    <tr>
+      <th></th>
+      <% game.players.forEach((player) => { %>
+        <th class="player-<%= player.name %>-cell"><%= player.name %></th>
+        <% }); %>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i < 8; i++) {%>
+      <tr>
+        <th scopre="row">
+          <%= game.scoresList[i] %>
+       </th>
+        <% game.players.forEach((player) => { %>
+          <td class="player-<%= player.name %>-cell"><%= player.scores[i] %></td>
+        <% }); %>
+
+      </tr>
+    <% }; %>
+
+  </tbody>
+</table>
