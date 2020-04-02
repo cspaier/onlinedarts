@@ -1,16 +1,8 @@
 <% if (volee.length == 0) { %>
   <span class="oi oi-trash float-left" title="bell" aria-hidden="true"></span>
-  Le joueur <b><%= player %></b>  a fait <span class="badge badge-primary">Fromage!</span>
-<% } else {%>
-  <% if (volee.length == 3) {%>
+<% } else if (volee.length == 3){%>
   <span class="oi oi-star float-left" title="pin" aria-hidden="true"></span>
-  <% } else {%>
-    <span class="oi oi-pin float-left" title="pin" aria-hidden="true"></span>
-  <% } %>
-  Le joueur <b><%= player %></b>  a fait:
-  <% volee.forEach((dart, i) => {%>
-    <% if (i>0){ %>,
-    <% } %>
-    <span class="badge badge-primary"> <%= dart.combo %> × <%= scoresList[dart.numeroTape] %></span>
-  <% }) %>
+<% } else {%>
+  <span class="oi oi-pin float-left" title="pin" aria-hidden="true"></span>
 <% } %>
+  Le joueur <b><%= player %></b>  a fait         <%- include('../table'); %>

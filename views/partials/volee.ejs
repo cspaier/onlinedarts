@@ -1,0 +1,11 @@
+<% if (volee.length == 0) { %>
+  <span class="badge badge-warning">Fromage!</span>
+<% } else { %>
+  <% volee.forEach((dart, i) => {%>
+    <% if (i>0){ %>,
+    <% } %>
+    <span class="badge badge-<%= ["", "secondary", "primary", "danger"][dart.combo] %>">
+      <%= dart.combo %> × <%= scoresList[dart.numeroTape] %>
+    </span>
+  <% }) %>
+<% } %>

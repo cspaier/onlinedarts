@@ -178,7 +178,8 @@
           if (i > 0){
             html += ', '
           }
-          html += '<span class="badge badge-primary">' +  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
+          html += '<span class="badge badge-' + ['', 'secondary', 'primary', 'danger'][dart.combo] + '">'
+          html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
         });
       }
       return html

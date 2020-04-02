@@ -18,7 +18,7 @@ app.set('view engine', 'ejs');
 fs = require('fs')
 templates = {
   tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
-  tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8')
+  tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8'),
 }
 // dart ={numeroTape: numeroTape, combo: combo}
 // volee = [{player: name, volee: [darts]]
@@ -141,8 +141,19 @@ io.on('connection', function(socket){
     }
     game.volees.push({playerName: game.activePlayer.name, volee:volee, previousScores: JSON.parse(JSON.stringify(game.activePlayer.scores))});
     scoreVolee(volee)
-    template_file = fs.readFileSync(__dirname + '/views/partials/alerts/new-volee.ejs', 'utf-8'),
-    game.alert = ejs.render(template_file, {player:game.activePlayer.name, volee: volee, scoresList: game.scoresList});
+    //create alert. ejs is a bit of a pain at the end :(
+    template_file = fs.readFileSync(__dirname + '/views/partials/volee.ejs', 'utf-8')
+    if (volee.length == 0) {
+      alert = '<span class="oi oi-trash float-left" title="bell" aria-hidden="true"></span>'
+    } else if (volee.length == 3) {
+      alert = '<span class="oi oi-star float-left" title="pin" aria-hidden="true"></span>'
+    } else {
+      alert = '<span class="oi oi-pin float-left" title="pin" aria-hidden="true"></span>'
+    }
+    alert +=  'Le joueur <b>' + game.activePlayer.name + '</b> a fait: '
+    alert += ejs.render(template_file, {volee: volee, scoresList: game.scoresList});
+    game.alert = alert
+    // change activePlayer
     game.activePlayer = getNextPlayer(game.activePlayer)
     io.emit('update-game', game);
   });
@@ -152,8 +163,13 @@ io.on('connection', function(socket){
       return false
     }
     volee = game.volees.pop()
-    template_file = fs.readFileSync(__dirname + '/views/partials/alerts/cancel-volee.ejs', 'utf-8'),
-    game.alert = ejs.render(template_file, {volee: volee, scoresList: game.scoresList});
+    // set alert
+    alert = '<span class="oi oi-action-undo float-left" title="trash" aria-hidden="true"></span>'
+    alert += 'Annulation de la volée de <b>' + volee.playerName + '</b>: '
+    template_file = fs.readFileSync(__dirname + '/views/partials/volee.ejs', 'utf-8'),
+    alert += ejs.render(template_file, {volee: volee.volee, scoresList: game.scoresList});
+    game.alert = alert
+    // set new activePlayer
     player = game.players.find(p => p.name == volee.playerName)
     game.activePlayer = player
     // attention on pop la derniere volée

@@ -1,6 +1,2 @@
-<span class="oi oi-action-undo float-left" title="trash" aria-hidden="true"></span> Annulation de la volée de <b><%= volee.playerName %></b>:
-<% volee.volee.forEach((dart, i) => { %>
-  <% if (i>0){ %>,
-  <% } %>
-  <span class="badge badge-primary"> <%= dart.combo %> × <%= scoresList[dart.numeroTape] %></span>
-<% }) %>
+<span class="oi oi-action-undo float-left" title="trash" aria-hidden="true"></span>
+Annulation de la volée de <b><%= volee.playerName %></b>: <%- include('partials/volee'); %>
