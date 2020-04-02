@@ -155,14 +155,15 @@
 
   var refreshVolees = function(){
     var html = ""
-    game.volees.forEach((v, i) => {
+    for (var i = game.volees.length - 1; i >= 0; i--) {
+      var v = game.volees[i]
       var round = i + 1
       html += '<li class="list-group-item">' + round + '. ' + v.playerName + ': ';
         v.volee.forEach((dart) => {
           html += dart.combo + ' x ' + game.scoresList[dart.numeroTape] + ' '
         });
         html +='</li>'
-    });
+    }
     $('#volees').html(html)
   }
 
