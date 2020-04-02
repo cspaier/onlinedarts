@@ -81,8 +81,12 @@
 
 
       </div><!-- game-state-2 -->
-
     </div><!-- col-md-6 -->
+    <div class="col-md-6">
+      <div id="alert" class="alert alert-info text-center">
+        truc
+      </div>
+    </div>
       </div><!-- row -->
 
 
@@ -253,12 +257,14 @@ var DartButtonsclick = function(el){
       });
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
+        $('#alert').html(game.alert)
         refresPlayersTable()
       });
 
       socket.on('change-game-state', function(game_from_server){
         game = game_from_server;
         volee = []
+        $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()
       });
@@ -266,6 +272,7 @@ var DartButtonsclick = function(el){
       socket.on('update-game', function(game_from_server){
         game = game_from_server;
         volee = []
+        $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()
         refreshVolees()

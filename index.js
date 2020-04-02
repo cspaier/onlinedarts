@@ -3,6 +3,7 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 app.use(express.static('static/'));
+var ejs = require('ejs');
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -38,6 +39,7 @@ var game = {
   volees: [],
   activePlayer: null,
   scoresList: [ 20, 19, 18, 17, 16, 15, 25, 'S'],
+  alert:'<span class="oi oi-star float-left" title="Bienvenu" aria-hidden="true"></span> Bienvenue!'
 }
 
 var createPlayer = function(name){
@@ -116,17 +118,20 @@ io.on('connection', function(socket){
     if (player){
       game.players.push(player)
     }
+    game.alert = '<span class="oi oi-plus float-left" title="nouveau joueur" aria-hidden="true"></span> Nouveau joueur: <b>' + player.name + '</b>'
     io.emit('change-players', game);
   });
 
   socket.on('remove-player', function(playerName){
-    game.players.pop()
+    var player = game.players.pop()
+    game.alert = '<span class="oi oi-trash float-left" title="trash" aria-hidden="true"></span> Le joueur <b>' + player.name + '</b> a été supprimé.'
     io.emit('change-players', game);
   });
 
   socket.on('start-game', function(){
     game.activePlayer = game.players[0];
     game.state = 2;
+    game.alert = '<span class="oi oi-bell float-left" title="bell" aria-hidden="true"></span> La partie a commencée.'
     io.emit('change-game-state', game);
   });
 
@@ -136,6 +141,8 @@ io.on('connection', function(socket){
     }
     game.volees.push({playerName: game.activePlayer.name, volee:volee, previousScores: JSON.parse(JSON.stringify(game.activePlayer.scores))});
     scoreVolee(volee)
+    template_file = fs.readFileSync(__dirname + '/views/partials/alerts/new-volee.ejs', 'utf-8'),
+    game.alert = ejs.render(template_file, {player:game.activePlayer.name, volee: volee, scoresList: game.scoresList});
     game.activePlayer = getNextPlayer(game.activePlayer)
     io.emit('update-game', game);
   });
@@ -145,6 +152,8 @@ io.on('connection', function(socket){
       return false
     }
     volee = game.volees.pop()
+    template_file = fs.readFileSync(__dirname + '/views/partials/alerts/cancel-volee.ejs', 'utf-8'),
+    game.alert = ejs.render(template_file, {volee: volee, scoresList: game.scoresList});
     player = game.players.find(p => p.name == volee.playerName)
     game.activePlayer = player
     // attention on pop la derniere volée
