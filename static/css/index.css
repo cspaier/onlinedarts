@@ -17,9 +17,8 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
  font-size: 1.5rem;
 }
 
-#volee-preview-card{
-  overflow-y: auto;
-  font-size: 90%;
+#volees > li{
+  padding-left: 0px;
 }
 
 #jitsi-container{

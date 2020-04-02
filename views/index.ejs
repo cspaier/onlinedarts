@@ -54,7 +54,7 @@
       <div class="game-state-2 row">
           <div class="col-4">
             <div id="volee-preview-card" class="card">
-              <div class="card-header">Volée de <span id="active-player-name"></span></div>
+              <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
               <ul id="volee-preview-list" class="list-group list-group-flush">
                 <li class="list-group-item">Fromage?</li>
               </ul>
@@ -158,26 +158,39 @@
     for (var i = game.volees.length - 1; i >= 0; i--) {
       var v = game.volees[i]
       var round = i + 1
-      html += '<li class="list-group-item">' + round + '. ' + v.playerName + ': ';
-        v.volee.forEach((dart) => {
-          html += dart.combo + ' x ' + game.scoresList[dart.numeroTape] + ' '
-        });
+      html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
+          html += voleeToString(v.volee)
         html +='</li>'
     }
     $('#volees').html(html)
   }
 
+    var voleeToString = function(volee){
+      // affichage d'une voléé. Retourne un string (html)
+      html=""
+      if (volee.length == 0){
+         html += '<span class="badge badge-warning">Fromage</span>'
+      } else {
+        volee.forEach((dart, i) => {
+          if (i > 0){
+            html += ', '
+          }
+          html += '<span class="badge badge-primary">' +  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
+        });
+      }
+      return html
+    }
 
     var updateVoleePreview = function(volee){
       // met à jour le résumé de la volée
-      var html = ""
-      volee.forEach((dart) => {
-          html += '<li class="list-group-item">' + dart.combo + ' x ' + game.scoresList[dart.numeroTape] + '</li>'
-      });
-      if (html == ""){
-        // volée vide!
-        html = '<li class="list-group-item">Fromage?</li>'
-      }
+      var html = '<li class="list-group-item">' + voleeToString(volee) + '</li>'
+      // volee.forEach((dart) => {
+      //     html += '<li class="list-group-item">' + dart.combo + ' x ' + game.scoresList[dart.numeroTape] + '</li>'
+      // });
+      // if (html == ""){
+      //   // volée vide!
+      //   html = '<li class="list-group-item">Fromage?</li>'
+      // }
       $('#volee-preview-list').html(html)
       // Si la volee à plus de 3 lancés, on ajoute la classe warning
       if (volee.length > 3){
