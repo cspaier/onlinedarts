@@ -63,15 +63,15 @@
           <div class="col">
             <div>
               <button class="btn btn-success btn-lg" id="valide-volee">
-                <span class="oi oi-check" title="plus" aria-hidden="true"></span> Valider
+                <span class="oi oi-check" title="Valider" aria-hidden="true"></span> Valider
               </button>
               <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
-                <span class="oi oi-action-undo" title="plus" aria-hidden="true"></span>
+                <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
               </button>
             </div>
             <div>
               <button class="btn btn-warning btn-xs mt-3" id="fromage">
-                <span class="oi oi-trash" title="plus" aria-hidden="true"></span> Fromage!
+                <span class="oi oi-trash" title="fromage" aria-hidden="true"></span> Fromage!
               </button>
             </div>
           </div>
@@ -153,7 +153,7 @@
     var html = ""
     game.volees.forEach((v, i) => {
       var round = i + 1
-      html += '<li class="list-group-item">' + round + '. ' + v.player.name + ': ';
+      html += '<li class="list-group-item">' + round + '. ' + v.playerName + ': ';
         v.volee.forEach((dart) => {
           html += dart.combo + ' x ' + game.scoresList[dart.numeroTape] + ' '
         });
