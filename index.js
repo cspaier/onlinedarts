@@ -75,10 +75,10 @@ var scoreVolee = function(volee){
         n = 3
     }
     game.activePlayer.scores[dart.numeroTape] = n
-    // test if game is over
-
   });
-
+  if ((game.activePlayer.scores.slice(0, 7).every(s => s == 3)) && (game.players.every(p => p.scores[7] <= game.activePlayer.scores[7]))){
+    game.state = 3
+  }
 }
 
 var getNextPlayer = function(activePlayer){
@@ -141,27 +141,34 @@ io.on('connection', function(socket){
     }
     game.volees.push({playerName: game.activePlayer.name, volee:volee, previousScores: JSON.parse(JSON.stringify(game.activePlayer.scores))});
     scoreVolee(volee)
-    //create alert. ejs is a bit of a pain at the end :(
-    template_file = fs.readFileSync(__dirname + '/views/partials/volee.ejs', 'utf-8')
-    if (volee.length == 0) {
-      alert = '<span class="oi oi-trash float-left" title="bell" aria-hidden="true"></span>'
-    } else if (volee.length == 3) {
-      alert = '<span class="oi oi-star float-left" title="pin" aria-hidden="true"></span>'
+    if (game.state == 3){
+      // game is finished!
+      game.alert = '<span class="oi oi-badge float-left" aria-hidden="true"></span>Le gagnant est <b>' + game.activePlayer.name + '</b>!!!'
+      io.emit('change-game-state', game);
     } else {
-      alert = '<span class="oi oi-pin float-left" title="pin" aria-hidden="true"></span>'
+      //create alert. ejs is a bit of a pain at the end :(
+      template_file = fs.readFileSync(__dirname + '/views/partials/volee.ejs', 'utf-8')
+      if (volee.length == 0) {
+        alert = '<span class="oi oi-trash float-left" title="bell" aria-hidden="true"></span>'
+      } else if (volee.length == 3) {
+        alert = '<span class="oi oi-star float-left" title="pin" aria-hidden="true"></span>'
+      } else {
+        alert = '<span class="oi oi-pin float-left" title="pin" aria-hidden="true"></span>'
+      }
+      alert +=  'Le joueur <b>' + game.activePlayer.name + '</b> a fait: '
+      alert += ejs.render(template_file, {volee: volee, scoresList: game.scoresList});
+      game.alert = alert
+      // change activePlayer
+      game.activePlayer = getNextPlayer(game.activePlayer)
+      io.emit('update-game', game);
     }
-    alert +=  'Le joueur <b>' + game.activePlayer.name + '</b> a fait: '
-    alert += ejs.render(template_file, {volee: volee, scoresList: game.scoresList});
-    game.alert = alert
-    // change activePlayer
-    game.activePlayer = getNextPlayer(game.activePlayer)
-    io.emit('update-game', game);
   });
 
   socket.on('cancel-volee', function(){
     if (game.volees.length == 0) {
       return false
     }
+    game.state = 2
     volee = game.volees.pop()
     // set alert
     alert = '<span class="oi oi-action-undo float-left" title="trash" aria-hidden="true"></span>'

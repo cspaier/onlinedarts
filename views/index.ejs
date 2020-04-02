@@ -54,8 +54,8 @@
 
       </div><!-- game-state-0 -->
 
-      <div class="game-state-2 row">
-          <div class="col-4">
+      <div class="row">
+          <div class="col game-state-2">
             <div id="volee-preview-card" class="card">
               <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
               <ul id="volee-preview-list" class="list-group list-group-flush">
@@ -63,13 +63,10 @@
               </ul>
             </div>
           </div>
-          <div class="col">
+          <div class="col-2 game-state-2">
             <div>
               <button class="btn btn-success btn-lg" id="valide-volee">
                 <span class="oi oi-check" title="Valider" aria-hidden="true"></span> Valider
-              </button>
-              <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
-                <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
               </button>
             </div>
             <div>
@@ -78,12 +75,16 @@
               </button>
             </div>
           </div>
-          <div class="col">
-            <ul id="volees" class="list-group"></ul>
+          <div class="col-2 game-state-2 game-state-3">
+            <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
+              <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
+            </button>
           </div>
+          <div class="col game-state-2 game-state-3">
+            <ul id="volees" class="list-group"></ul>
 
-
-      </div><!-- game-state-2 -->
+          </div>
+      </div><!-- row -->
     </div><!-- col-md-6 -->
     <div class="col-md-6">
       <div id="alert" class="alert alert-info text-center">
@@ -117,18 +118,16 @@
     var refreshForGameState = function(){
       // On cache/affiche les élèments en fonction du game_state
       if (game.state == 0){
-        $('.game-state-0').show();
         $('.game-state-1').hide();
         $('.game-state-2').hide();
         $('.game-state-3').hide();
-
+        $('.game-state-0').show();
       }
       else if (game.state == 2) {
         $('.game-state-0').hide();
         $('.game-state-1').hide();
-        $('.game-state-2').show();
         $('.game-state-3').hide();
-
+        $('.game-state-2').show();
       }
       else if (game.state == 3) {
         $('.game-state-0').hide();
@@ -140,7 +139,7 @@
 
     var refresPlayersTable = function(){
       //recharge le tableau principal avec les nouvelles données
-      if (game.state == 0){
+      if (game.state == 0 || game.state == 3){
         template = templates.tableState0
         var html = ejs.render(template, { game: game });
         $('#players-table').html(html);
@@ -310,6 +309,7 @@ var DartButtonsclick = function(el){
     });
   </script>
   <script>
+    //Jitsi setup
     //https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
     var domain = "meet.jit.si";
     var options = {
