@@ -39,7 +39,7 @@ var game = {
   volees: [],
   activePlayer: null,
   scoresList: [ 20, 19, 18, 17, 16, 15, 25, 'S'],
-  alert:'<span class="oi oi-star float-left" title="Bienvenu" aria-hidden="true"></span> Bienvenue!'
+  alert:'<span class="oi oi-heart float-left" title="Bienvenu" aria-hidden="true"></span> Bienvenue!'
 }
 
 var createPlayer = function(name){
