@@ -51,7 +51,7 @@
           </button>
         </div>
         </div>
-        
+
       </div><!-- game-state-0 -->
 
       <div class="game-state-2 row">
@@ -262,6 +262,12 @@ var DartButtonsclick = function(el){
         return false;
       });
       $('#valide-volee').click(function(e){
+        socket.emit('valide-volee', volee);
+        return false;
+      });
+
+      $('#fromage').click(function(e){
+        volee = []
         socket.emit('valide-volee', volee);
         return false;
       });
