@@ -301,7 +301,12 @@ var DartButtonsclick = function(el){
         refreshForGameState()
         refreshVolees()
       });
-
+      socket.on('disconnect',function(reason){
+        var alert = '<div class="spinner-border text-warning float-left" role="status">'
+        alert += '<span class="sr-only">Loading...</span></div>'
+        alert += ' Connection au serveur perdue. En attente de reconnection.'
+        $('#alert').html(alert)
+      });
     });
   </script>
   <script>
