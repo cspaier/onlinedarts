@@ -246,13 +246,11 @@ var DartButtonsclick = function(el){
       });
       $('#valide-volee').click(function(e){
         socket.emit('valide-volee', volee);
-        updateVoleePreview(volee)
         return false;
       });
 
       $('#cancel-volee').click(function(e){
         socket.emit('cancel-volee');
-        updateVoleePreview(volee)
         return false;
       });
       socket.on('change-players', function(game_from_server){
@@ -264,6 +262,7 @@ var DartButtonsclick = function(el){
       socket.on('change-game-state', function(game_from_server){
         game = game_from_server;
         volee = []
+        updateVoleePreview(volee)
         $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()
@@ -272,6 +271,7 @@ var DartButtonsclick = function(el){
       socket.on('update-game', function(game_from_server){
         game = game_from_server;
         volee = []
+        updateVoleePreview(volee)
         $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()

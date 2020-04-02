@@ -21,3 +21,10 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
   overflow-y: auto;
   font-size: 90%;
 }
+
+#jitsi-container{
+  margin-bottom: 16px;
+}
+#alert{
+  font-size: 200%;
+}
