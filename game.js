@@ -145,7 +145,13 @@ function Game(){
             if (i > 0){
               html += ', '
             }
-            html += '<span class="badge badge-' + ['', 'secondary', 'primary', 'danger'][dart.combo] + '">'
+            if (dart.numeroTape == 6){
+              // Boulle!
+              var classList = ['', 'success', 'danger'];
+            } else {
+              var classList = ['', 'secondary', 'info', 'primary']
+            }
+            html += '<span class="badge badge-' + classList[dart.combo] + '">'
             html +=  dart.combo + ' × ' + this.scoresList[dart.numeroTape] + '</span>'
           });
         }
