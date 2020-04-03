@@ -150,7 +150,22 @@ function Game(){
           });
         }
         return html
-    }
+    };
+
+    // it seems methods are not passed to client anyway.
+    // this.toClient = function(){
+    //   // prepare datas to send to client. We just keep the needed methods.
+    //   var game = {
+    //     state: this.state,
+    //     players: this.players,
+    //     volees: this.volees,
+    //     scoresList: this.scoresList,
+    //     activePlayer: this.activePlayer,
+    //     alert: this.alert,
+    //     dartsToString: this.dartsToString
+    //   }
+    //   return game;
+    // }
 
 
 };

@@ -110,9 +110,26 @@
 
     <script>
     var game = <%- JSON.stringify(game) %>;
-    // volle est une liste de longueur <= 3
+    // darts est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
-    var volee = []
+    var darts = []
+
+    var dartsToString = function(darts){
+        // affichage d'une voléé. Retourne un string (html)
+        html=""
+        if (darts.length == 0){
+           html += '<span class="badge badge-warning">Fromage</span>'
+        } else {
+          darts.forEach((dart, i) => {
+            if (i > 0){
+              html += ', '
+            }
+            html += '<span class="badge badge-' + ['', 'secondary', 'primary', 'danger'][dart.combo] + '">'
+            html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
+          });
+        }
+        return html
+    }
 
     var refreshForGameState = function(){
       // On cache/affiche les élèments en fonction du game_state
@@ -160,42 +177,19 @@
       var v = game.volees[i]
       var round = i + 1
       html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
-          html += voleeToString(v.volee)
+          html += dartsToString(v.darts)
         html +='</li>'
     }
     $('#volees').html(html)
   }
 
-    var voleeToString = function(volee){
-      // affichage d'une voléé. Retourne un string (html)
-      html=""
-      if (volee.length == 0){
-         html += '<span class="badge badge-warning">Fromage</span>'
-      } else {
-        volee.forEach((dart, i) => {
-          if (i > 0){
-            html += ', '
-          }
-          html += '<span class="badge badge-' + ['', 'secondary', 'primary', 'danger'][dart.combo] + '">'
-          html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
-        });
-      }
-      return html
-    }
 
-    var updateVoleePreview = function(volee){
+    var updateVoleePreview = function(darts){
       // met à jour le résumé de la volée
-      var html = '<li class="list-group-item">' + voleeToString(volee) + '</li>'
-      // volee.forEach((dart) => {
-      //     html += '<li class="list-group-item">' + dart.combo + ' x ' + game.scoresList[dart.numeroTape] + '</li>'
-      // });
-      // if (html == ""){
-      //   // volée vide!
-      //   html = '<li class="list-group-item">Fromage?</li>'
-      // }
+      var html = '<li class="list-group-item">' + dartsToString(darts) + '</li>'
       $('#volee-preview-list').html(html)
       // Si la volee à plus de 3 lancés, on ajoute la classe warning
-      if (volee.length > 3){
+      if (darts.length > 3){
         $('#volee-preview-card').addClass("border-warning")
           $('#valide-volee').prop("disabled", true);
           $('#valide-volee').removeClass("btn-success")
@@ -203,7 +197,7 @@
       }
       else{
         $('#volee-preview-card').removeClass("border-warning")
-        if (volee.length >0){
+        if (darts.length >0){
           $('#volee-preview-card').addClass("border-success")
         }
         $('#valide-volee').prop("disabled", false);
@@ -226,16 +220,16 @@ var DartButtonsclick = function(el){
           $(el).html("&nbsp;")
           $(el).data("n", 0)
           // enlève tous les numeroTape x combo de la volee
-          volee = volee.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
-          updateVoleePreview(volee)
+          darts = darts.filter(l => (l.numeroTape !== numeroTape) || (l.combo !== combo) );
+          updateVoleePreview(darts)
           return false
         }
 
-        volee.push(dart)
+        darts.push(dart)
         // met à jour le bouton
         $(el).data("n", n_initial +1)
         $(el).html(n_initial +1)
-        updateVoleePreview(volee)
+        updateVoleePreview(darts)
 
       };
 
@@ -261,13 +255,13 @@ var DartButtonsclick = function(el){
         return false;
       });
       $('#valide-volee').click(function(e){
-        socket.emit('valide-volee', volee);
+        socket.emit('valide-volee', darts);
         return false;
       });
 
       $('#fromage').click(function(e){
-        volee = []
-        socket.emit('valide-volee', volee);
+        darts = []
+        socket.emit('valide-volee', darts);
         return false;
       });
 
@@ -275,6 +269,7 @@ var DartButtonsclick = function(el){
         socket.emit('cancel-volee');
         return false;
       });
+
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         $('#alert').html(game.alert)
@@ -283,8 +278,8 @@ var DartButtonsclick = function(el){
 
       socket.on('change-game-state', function(game_from_server){
         game = game_from_server;
-        volee = []
-        updateVoleePreview(volee)
+        darts = []
+        updateVoleePreview(darts)
         $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()
@@ -292,8 +287,9 @@ var DartButtonsclick = function(el){
 
       socket.on('update-game', function(game_from_server){
         game = game_from_server;
-        volee = []
-        updateVoleePreview(volee)
+        console.log(game)
+        darts = []
+        updateVoleePreview(darts)
         $('#alert').html(game.alert)
         refresPlayersTable()
         refreshForGameState()
