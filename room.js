@@ -23,8 +23,10 @@ function Room(id, name, password){
       game: this.game,
       private: this.password.length > 0,
       id: this.id
-
   }
+  }
+  this.isAuth = function(id){
+    return (this.password.length == 0) || (this.sockets.includes(id))
   }
 };
 

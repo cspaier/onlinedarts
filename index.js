@@ -11,7 +11,7 @@ var RoomExports = require('./room.js')
 var Room = RoomExports.Room
 var createNewRoom = RoomExports.createNewRoom
 
-// get table template as string:
+// On va passer des templates au client
 fs = require('fs')
 var roomTemplates = {
   tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
@@ -23,31 +23,44 @@ var homeTemplates = {
 var game = new Game();
 var rooms = [];
 
-// La vue
+// Les vues
+
 app.get('/', function(req, res){
   res.render('home', {rooms: rooms, templates: homeTemplates});
 });
 
-app.get('/room/:roomName', function(req, res){
-  res.render('index', {game: game, templates: roomTemplates});
+app.get('/room/:roomId', function(req, res){
+  var room = rooms.find(r => r.id = req.params.roomId)
+  if (room === undefined){
+    res.redirect('/');
+  }else{
+  res.render('room', {room:room.toClient(), game: room.game, templates: roomTemplates});
+  }
 });
 
 
+// sockets
+
 io.on('connection', function(socket){
   socket.join('home');
-  io.to(socket.id).emit('update-rooms', rooms);
+  io.emit('update-rooms', rooms.map(r => r.toClient()));
+
+  socket.on('join-room', function(roomId){
+    io.emit('update-game', game);
+  });
 
   // home
 
   socket.on('create-room', function(datas){
     var room = createNewRoom(datas.roomName, datas.password, rooms)
     if (!room){
-      io.to('home').emit('update-rooms', rooms.map(r => r.toClient()));
+      io.emit('update-rooms', rooms.map(r => r.toClient()));
       return false;
     }
     rooms.push(room);
-    io.to('home').emit('update-rooms', rooms.map(r => r.toClient()));
+    io.emit('update-rooms', rooms.map(r => r.toClient()));
   });
+
 
   // game things
   // all io.emit will pass game object. This way we are clear game state is always same for all clients

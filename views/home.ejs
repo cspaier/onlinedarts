@@ -13,7 +13,7 @@
 
   <body>
     <div class="container-fluid">
-        <h1> Jouer au flechettes avec vos amis!</h1>
+        <h1>La fièvre du tungstène!</h1>
       <div class="row">
         <legend>Nouvelle salle</legend>
         <form id="create-room" action="" class="form-inline">
@@ -52,6 +52,10 @@
       $('#rooms').html(html)
     };
 
+
+    var joinRoom = function(roomId){
+      io.emit('joinRoom',roomId)
+    }
 
     $(function () {
 

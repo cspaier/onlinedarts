@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Onlinedarts</title>
+    <title>Onlinedarts - <%= room.name %></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 auth">
       <!-- Controls-->
         <div class="game-state-0">
           <div class="row">
@@ -92,6 +92,7 @@
           </div>
       </div><!-- row -->
     </div><!-- col-md-6 -->
+
     <div class="col-md-6">
       <div id="alert" class="alert alert-info text-center">
         <div class="spinner-border text-warning float-left" role="status">
@@ -117,7 +118,8 @@
     </script>
 
     <script>
-    var game = <%- JSON.stringify(game) %>;
+    var room = <%- JSON.stringify(room) %>;
+    var game = room.game;
     // darts est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
     var darts = []
@@ -250,7 +252,7 @@ var DartButtonsclick = function(el){
     $(function () {
       refreshForGameState();
       var socket = io();
-
+      socket.emit('join-room', <% room.id %>);
 
       $('#new-player').submit(function(e){
         e.preventDefault(); // prevents page reloading
@@ -288,6 +290,8 @@ var DartButtonsclick = function(el){
         socket.emit('new-game');
         return false;
       });
+
+      // socket receiver
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         $('#alert').html(game.alert)
@@ -304,6 +308,7 @@ var DartButtonsclick = function(el){
       });
 
       socket.on('update-game', function(game_from_server){
+        console.log('here')
         game = game_from_server;
         console.log(game)
         darts = []
@@ -313,6 +318,7 @@ var DartButtonsclick = function(el){
         refreshForGameState()
         refreshVolees()
       });
+
       socket.on('disconnect',function(reason){
         var alert = '<div class="spinner-border text-warning float-left" role="status">'
         alert += '<span class="sr-only">Loading...</span></div>'
@@ -339,7 +345,7 @@ var DartButtonsclick = function(el){
         ],
       }
   }
-  var api = new JitsiMeetExternalAPI(domain, options);
+  //var api = new JitsiMeetExternalAPI(domain, options);
   </script>
   </body>
 </html>
