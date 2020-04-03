@@ -7,59 +7,63 @@ var ejs = require('ejs');
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 var Game = require('./game.js')
-var Room = require('./room.js')
-
+var RoomExports = require('./room.js')
+var Room = RoomExports.Room
+var createNewRoom = RoomExports.createNewRoom
 
 // get table template as string:
 fs = require('fs')
-var templates = {
+var roomTemplates = {
   tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
   tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8'),
 }
-
+var homeTemplates = {
+  cardRoom: fs.readFileSync(__dirname + '/views/partials/card-room.ejs', 'utf-8'),
+}
 var game = new Game();
 var rooms = [];
 
 // La vue
 app.get('/', function(req, res){
-  res.render('index', {rooms: rooms});
+  res.render('home', {rooms: rooms, templates: homeTemplates});
 });
 
 app.get('/room/:roomName', function(req, res){
-  res.render('index', {game: game, templates: templates});
+  res.render('index', {game: game, templates: roomTemplates});
 });
 
-var homeSocket = io
-  .of('/')
-  .on('connection', function(socket){
-    homeSocket.emit('update-rooms', rooms);
 
-    socket.on('create-room', function(datas){
-      room = new Room(datas.roomName, data.password)
-      rooms.append(room);
-      roomsSocket.emit('update-rooms', rooms);
-    });
+io.on('connection', function(socket){
+  socket.join('home');
+  io.to(socket.id).emit('update-rooms', rooms);
 
-});
+  // home
 
-var roomsSocket = io
-  .of('/rooms')
-  .on('connection', function(socket){
-  roomsSocket.emit('update-game', game);
+  socket.on('create-room', function(datas){
+    var room = createNewRoom(datas.roomName, datas.password, rooms)
+    if (!room){
+      io.to('home').emit('update-rooms', rooms.map(r => r.toClient()));
+      return false;
+    }
+    rooms.push(room);
+    io.to('home').emit('update-rooms', rooms.map(r => r.toClient()));
+  });
+
+  // game things
   // all io.emit will pass game object. This way we are clear game state is always same for all clients
   socket.on('new-player', function(playerName){
     game.createPlayer(playerName);
-    roomsSocket.emit('change-players', game);
+    io.emit('change-players', game);
   });
 
   socket.on('remove-player', function(playerName){
     game.removePlayer();
-    roomsSocket.emit('change-players', game);
+    io.emit('change-players', game);
   });
 
   socket.on('start-game', function(){
     game.startGame()
-    roomsSocket.emit('change-game-state', game);
+    io.emit('change-game-state', game);
   });
 
   socket.on('valide-volee', function(darts){
@@ -69,21 +73,21 @@ var roomsSocket = io
     game.scoreVolee(darts)
     if (game.state == 3){
       // game is finished!
-      roomsSocket.emit('change-game-state', game);
+      io.emit('change-game-state', game);
     } else {
       game.activePlayer = game.getNextPlayer()
-      roomsSocket.emit('update-game', game);
+      io.emit('update-game', game);
     }
   });
 
   socket.on('cancel-volee', function(){
     game.cancelVolee()
-    roomsSocket.emit('update-game', game)
+    io.emit('update-game', game)
   });
 
   socket.on('new-game', function(){
     game = new Game()
-    roomsSocket.emit('change-game-state', game)
+    io.emit('change-game-state', game)
   });
 });
 
