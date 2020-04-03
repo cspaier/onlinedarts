@@ -75,6 +75,12 @@
               </button>
             </div>
           </div>
+          <div class="col-4 game-state-3">
+            <button class="btn btn-primary btn" id="new-game">
+              <span class="oi oi-media-play" title="new-game" aria-hidden="true"></span>
+              Nouvelle partie
+            </button>
+          </div>
           <div class="col-2 game-state-2 game-state-3">
             <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
               <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
@@ -88,7 +94,9 @@
     </div><!-- col-md-6 -->
     <div class="col-md-6">
       <div id="alert" class="alert alert-info text-center">
-        Connecting to server
+        <div class="spinner-border text-warning float-left" role="status">
+        <span class="sr-only">Loading...</span></div>
+        Connection au serveur...
       </div>
     </div>
       </div><!-- row -->
@@ -276,6 +284,10 @@ var DartButtonsclick = function(el){
         return false;
       });
 
+      $('#new-game').click(function(e){
+        socket.emit('new-game');
+        return false;
+      });
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         $('#alert').html(game.alert)
@@ -327,7 +339,7 @@ var DartButtonsclick = function(el){
         ],
       }
   }
-  //var api = new JitsiMeetExternalAPI(domain, options);
+  var api = new JitsiMeetExternalAPI(domain, options);
   </script>
   </body>
 </html>

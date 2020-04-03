@@ -59,6 +59,11 @@ io.on('connection', function(socket){
     game.cancelVolee()
     io.emit('update-game', game)
   });
+
+  socket.on('new-game', function(){
+    game = new Game()
+    io.emit('change-game-state', game)
+  });
 });
 
 let port = process.env.PORT;
