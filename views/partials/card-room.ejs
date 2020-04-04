@@ -1,7 +1,7 @@
 <% rooms.forEach((room) => { %>
   <div class="col-4">
     <div class="card">
-      <a href="/room/<%= room.id %>" class="card-header">
+      <a href="/room/<%= room.id %>" class="card-header text-decoration-none">
         <%= room.name %>
         <% if (!room.public){ %>
           <span class="oi oi-lock-locked float-right"></span>
@@ -32,7 +32,7 @@
           </tbody>
         </table>
       </div>
-      <div class="card-footer text-center">
+      <div class="card-footer text-center room-card-footer">
         <%- room.game.alert %>
         </div>
     </div>

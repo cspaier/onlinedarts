@@ -42,7 +42,7 @@ app.get('/room/:roomId', function(req, res){
 
 io.on('connection', function(socket){
   socket.join('home');
-  io.emit('update-rooms', rooms.toClient());
+  io.to('home').emit('update-rooms', rooms.toClient());
 
   socket.on('join-room', function(roomId){
     var room = rooms.getRoomById(roomId)
@@ -84,6 +84,7 @@ io.on('connection', function(socket){
     }
     room.game.createPlayer(datas.playerName);
     io.to(room.id).emit('change-players', room.game);
+    io.to('home').emit('update-rooms', rooms.toClient());
   });
 
   socket.on('remove-player', function(datas){
@@ -93,6 +94,8 @@ io.on('connection', function(socket){
     }
     room.game.removePlayer();
     io.to(room.id).emit('change-players', room.game);
+    io.to('home').emit('update-rooms', rooms.toClient());
+
   });
 
   socket.on('start-game', function(datas){
@@ -102,6 +105,7 @@ io.on('connection', function(socket){
     }
     room.game.startGame()
     io.to(room.id).emit('change-game-state', room.game);
+    io.to('home').emit('update-rooms', rooms.toClient());
   });
 
   socket.on('valide-volee', function(datas){
@@ -121,6 +125,7 @@ io.on('connection', function(socket){
     } else {
       game.activePlayer = game.getNextPlayer()
       io.to(room.id).emit('update-game', game);
+      io.to('home').emit('update-rooms', rooms.toClient());
     }
   });
 
@@ -131,6 +136,7 @@ io.on('connection', function(socket){
     }
     room.game.cancelVolee()
     io.to(room.id).emit('update-game', room.game)
+    io.to('home').emit('update-rooms', rooms.toClient());
   });
 
   socket.on('new-game', function(datas){
@@ -148,6 +154,8 @@ io.on('connection', function(socket){
       return false
     }
     io.to(socket.id).emit('jitsi-connect', {jitsiRoom: room.jitsiRoom})
+    io.to('home').emit('update-rooms', rooms.toClient());
+
   });
 
 });

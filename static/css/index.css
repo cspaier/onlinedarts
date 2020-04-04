@@ -30,3 +30,6 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 #jitsi-connect-button{
   margin-top:300px;
 }
+.room-card-footer{
+  font-size: :80%;
+}
