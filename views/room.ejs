@@ -252,42 +252,42 @@ var DartButtonsclick = function(el){
     $(function () {
       refreshForGameState();
       var socket = io();
-      socket.emit('join-room', <% room.id %>);
+      socket.emit('join-room', room.id);
 
       $('#new-player').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        socket.emit('new-player', $('#new-player-name').val());
+        socket.emit('new-player', {playerName: $('#new-player-name').val(), roomId: room.id} );
         $('#new-player-name').val('');
         return false;
       });
 
       $('#remove-player').click(function(e){
-        socket.emit('remove-player');
+        socket.emit('remove-player', {roomId: room.id});
         return false;
       });
 
       $('#start-game').click(function(e){
-        socket.emit('start-game');
+        socket.emit('start-game', {roomId: room.id});
         return false;
       });
       $('#valide-volee').click(function(e){
-        socket.emit('valide-volee', darts);
+        socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       });
 
       $('#fromage').click(function(e){
         darts = []
-        socket.emit('valide-volee', darts);
+        socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       });
 
       $('#cancel-volee').click(function(e){
-        socket.emit('cancel-volee');
+        socket.emit('cancel-volee', {roomId: room.id});
         return false;
       });
 
       $('#new-game').click(function(e){
-        socket.emit('new-game');
+        socket.emit('new-game', {roomId: room.id});
         return false;
       });
 
@@ -308,9 +308,7 @@ var DartButtonsclick = function(el){
       });
 
       socket.on('update-game', function(game_from_server){
-        console.log('here')
         game = game_from_server;
-        console.log(game)
         darts = []
         updateVoleePreview(darts)
         $('#alert').html(game.alert)
