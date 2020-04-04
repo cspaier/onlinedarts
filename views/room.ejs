@@ -363,7 +363,6 @@ var DartButtonsclick = function(el){
       socket.on('jitsi-connect', function(datas){
         var jitsiContainer = document.getElementById("jitsi-container");
         $('#jitsi-connect-button').addClass('d-none');
-        console.log(datas.jitsiRoom)
         jitsiConnect(jitsiContainer, datas.jitsiRoom);
       });
 

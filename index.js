@@ -69,7 +69,7 @@ io.on('connection', function(socket){
       return false
     }
     // clean sockets list
-    room.cleanSockets(io.sockets.clients());
+    room.cleanSockets(io.sockets.clients().connected);
     if (room.login(datas.password, socket.id)){
       // login successfull
       io.to(socket.id).emit('login', room.game);

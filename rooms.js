@@ -29,10 +29,10 @@ function Room(id, name, password){
   this.isAuth = function(id){
     return (this.password.length == 0) || (this.sockets.includes(id))
   }
-  this.cleanSockets = function(socketsList){
+  this.cleanSockets = function(sockets){
     // sockets is the list of connected sockets (auth or not)
     // we remove all disconnected sockets from room.sockects
-    this.sockets = this.sockets.filter(s => socketsList.includes(s))
+    this.sockets = this.sockets.filter(s => s in sockets)
   }
 };
 
