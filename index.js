@@ -104,7 +104,7 @@ io.on('connection', function(socket){
       return false
     }
     room.game.startGame()
-    io.to(room.id).emit('change-game-state', room.game);
+    io.to(room.id).emit('update-game', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
   });
 
@@ -121,7 +121,9 @@ io.on('connection', function(socket){
     game.scoreVolee(darts)
     if (game.state == 3){
       // game is finished!
-      io.emit('change-game-state', game);
+      io.emit('update-game', game);
+      io.to('home').emit('update-rooms', rooms.toClient());
+
     } else {
       game.activePlayer = game.getNextPlayer()
       io.to(room.id).emit('update-game', game);
@@ -145,7 +147,7 @@ io.on('connection', function(socket){
       return false
     }
     room.game = new Game()
-    io.to(room.id).emit('change-game-state', room.game)
+    io.to(room.id).emit('update-game', room.game)
   });
 
   socket.on('jitsi-connect', function(datas){

@@ -342,15 +342,6 @@ var DartButtonsclick = function(el){
         refresPlayersTable()
       });
 
-      socket.on('change-game-state', function(game_from_server){
-        game = game_from_server;
-        darts = []
-        updateVoleePreview(darts)
-        $('#alert').html(game.alert)
-        refresPlayersTable()
-        refreshForGameState()
-      });
-
       socket.on('update-game', function(gameFromServer){
         game = gameFromServer;
         darts = []
