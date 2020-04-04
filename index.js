@@ -125,7 +125,7 @@ io.on('connection', function(socket){
     game.scoreVolee(darts)
     if (game.state == 3){
       // game is finished!
-      io.emit('update-game', game);
+      io.to(room.id).emit('update-game', game);
       io.to('home').emit('update-rooms', rooms.toClient());
 
     } else {
