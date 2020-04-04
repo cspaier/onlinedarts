@@ -25,6 +25,8 @@ var rooms = new Rooms;
 // Les vues
 
 app.get('/', function(req, res){
+  // clear inactive rooms
+  rooms = rooms.cleanInactives()
   res.render('home', {rooms: rooms.toClient(), templates: homeTemplates});
 });
 
@@ -41,8 +43,10 @@ app.get('/room/:roomId', function(req, res){
 // sockets
 
 io.on('connection', function(socket){
-  socket.join('home');
-  io.to('home').emit('update-rooms', rooms.toClient());
+  socket.on('join-home', function(){
+    socket.join('home');
+    io.to(socket.id).emit('update-rooms', rooms.toClient());
+  })
 
   socket.on('join-room', function(roomId){
     var room = rooms.getRoomById(roomId)

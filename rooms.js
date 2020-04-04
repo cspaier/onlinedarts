@@ -8,6 +8,7 @@ function Room(id, name, password){
   this.password = password;
   this.game = new Game;
   this.id = id;
+  this.lastActivity = Date.now();
   this.toClient = function(){
     return {
       name: this.name,
@@ -58,14 +59,25 @@ class Rooms extends Array {
   }
 
   getRoomAndCheckAuth(roomId, socketId){
-    // try to get room by its id and check if sockit is auth
+    // try to get room by its id and check if sockit is auth.
+    // update room timestamp since this method will be called on every action
     // returns the room if both check pass and false otherwise
     var room = this.getRoomById(roomId)
     if ((room != undefined) && (room.isAuth(socketId))){
+      // update timestamp
+      room.lastActivity = Date.now();
       return room
     } else {
       return false
     }
+  }
+
+  cleanInactives(){
+    // Remove all inactive rooms
+    // number of milliseconds for a room to be considered inactive : 2 hour
+    const inactivityLimit = 1000 * 60 * 60 * 2
+    var rooms = this.filter(r =>  Date.now() - r.lastActivity < inactivityLimit)
+    return rooms
   }
 }
 
