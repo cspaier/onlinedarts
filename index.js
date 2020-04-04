@@ -68,8 +68,13 @@ io.on('connection', function(socket){
     if (room == undefined){
       return false
     }
-    room.login(datas.password, socket.id)
-    io.to(socket.id).emit('login', room.game);
+    // clean sockets list
+    room.cleanSockets(io.sockets.clients());
+    if (room.login(datas.password, socket.id)){
+      // login successfull
+      io.to(socket.id).emit('login', room.game);
+    }
+    return false
   });
 
   socket.on('new-player', function(datas){
@@ -115,7 +120,7 @@ io.on('connection', function(socket){
       io.emit('change-game-state', game);
     } else {
       game.activePlayer = game.getNextPlayer()
-      io.emit('update-game', game);
+      io.to(room.id).emit('update-game', game);
     }
   });
 
@@ -125,7 +130,7 @@ io.on('connection', function(socket){
       return false
     }
     game.cancelVolee()
-    io.emit('update-game', room.game)
+    io.to(room.id).emit('update-game', room.game)
   });
 
   socket.on('new-game', function(datas){
@@ -134,8 +139,9 @@ io.on('connection', function(socket){
       return false
     }
     room.game = new Game()
-    io.emit('change-game-state', room.game)
+    io.to(room.id).emit('change-game-state', room.game)
   });
+
 });
 
 let port = process.env.PORT;
