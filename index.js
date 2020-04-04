@@ -20,7 +20,7 @@ var homeTemplates = {
 }
 
 var rooms = new Rooms;
-rooms.createNewRoom("test","c")
+
 
 // Les vues
 

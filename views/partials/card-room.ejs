@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header">
         <%= room.name %>
-        <% if (room.private){ %>
+        <% if (!room.public){ %>
           <span class="oi oi-lock-locked float-right"></span>
         <% } %>
       </div>

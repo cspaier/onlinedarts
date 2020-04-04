@@ -12,7 +12,7 @@ function Room(id, name, password){
     return {
       name: this.name,
       game: this.game,
-      private: this.password.length > 0,
+      public: this.password.length == 0,
       id: this.id,
     }
   }
