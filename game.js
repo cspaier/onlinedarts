@@ -128,7 +128,7 @@ function Game(){
       if (this.players.length > 0 ) {
         this.activePlayer = this.players[0];
         this.state = 2;
-        this.alert = '<span class="oi oi-bell float-left" title="bell" aria-hidden="true"></span> La partie a commencée.'
+        this.alert = '<span class="oi oi-bell float-left" title="bell" aria-hidden="true"></span> La partie a commencé.'
         return true;
       } else{
         return false;
