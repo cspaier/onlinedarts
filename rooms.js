@@ -1,9 +1,10 @@
 var Game = require('./game.js')
+const { v4: uuidv4 } = require('uuid');
 
 function Room(id, name, password){
   this.name = name;
   this.sockets = [];
-  this.jitsiUrl = "";
+  this.jitsiRoom = uuidv4();
   this.password = password;
   this.game = new Game;
   this.id = id;
@@ -28,10 +29,10 @@ function Room(id, name, password){
   this.isAuth = function(id){
     return (this.password.length == 0) || (this.sockets.includes(id))
   }
-  this.cleanSockets = function(sockets){
+  this.cleanSockets = function(socketsList){
     // sockets is the list of connected sockets (auth or not)
     // we remove all disconnected sockets from room.sockects
-    this.sockets = this.sockets.filter(s => sockets.includes(s))
+    this.sockets = this.sockets.filter(s => socketsList.includes(s))
   }
 };
 

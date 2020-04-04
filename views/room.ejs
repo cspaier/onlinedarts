@@ -19,8 +19,13 @@
         </div>
       </div>
       <!--Jitsi container -->
-      <div id="jitsi-container" class="col-md-6">
+      <div id="jitsi-container" class="auth col-md-6 text-center border">
+          <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+            <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+            Activer la visioconférence.
+          </button>
       </div>
+
     </div>
     <div class="row">
       <div class="col-md-6 auth d-none">
@@ -123,8 +128,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="/ejs.min.js"></script>
+    <script src="/js/ejs.min.js"></script>
     <script src='https://meet.jit.si/external_api.js'></script>
+    <script type="text/javascript" src="/js/jitsi-setup.js"></script>
     <script type="text/javascript">
         var templates = <%- JSON.stringify(templates) %>; // Get templates object
     </script>
@@ -318,6 +324,9 @@ var DartButtonsclick = function(el){
         return false;
       });
 
+      $('#jitsi-connect-button').click(function(){
+        socket.emit('jitsi-connect', {roomId: room.id});
+      });
       // socket receiver
       socket.on('login', function(gameFromServer){
         game = gameFromServer;
@@ -351,6 +360,13 @@ var DartButtonsclick = function(el){
         refreshVolees()
       });
 
+      socket.on('jitsi-connect', function(datas){
+        var jitsiContainer = document.getElementById("jitsi-container");
+        $('#jitsi-connect-button').addClass('d-none');
+        console.log(datas.jitsiRoom)
+        jitsiConnect(jitsiContainer, datas.jitsiRoom);
+      });
+
       socket.on('disconnect',function(reason){
         var alert = '<div class="spinner-border text-warning float-left" role="status">'
         alert += '<span class="sr-only">Loading...</span></div>'
@@ -359,25 +375,6 @@ var DartButtonsclick = function(el){
       });
     });
   </script>
-  <script>
-    //Jitsi setup
-    //https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
-    var domain = "meet.jit.si";
-    var options = {
-      roomName: "onlinedarts",
-      width: "100%",
-      //height: "auto",
-      parentNode: document.getElementById("jitsi-container"),
-      configOverwrite: {},
-      interfaceConfigOverwrite: {
-        TOOLBAR_BUTTONS: [
-          'microphone', 'camera', 'closedcaptions', 'fullscreen',
-          'fodeviceselection', 'profile', 'chat', 'settings',
-          'videoquality', 'filmstrip', 'tileview',
-        ],
-      }
-  }
-  //var api = new JitsiMeetExternalAPI(domain, options);
-  </script>
+
   </body>
 </html>

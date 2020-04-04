@@ -142,6 +142,14 @@ io.on('connection', function(socket){
     io.to(room.id).emit('change-game-state', room.game)
   });
 
+  socket.on('jitsi-connect', function(datas){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
+      return false
+    }
+    io.to(socket.id).emit('jitsi-connect', {jitsiRoom: room.jitsiRoom})
+  });
+
 });
 
 let port = process.env.PORT;

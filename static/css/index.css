@@ -27,3 +27,6 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 #alert{
   font-size: 200%;
 }
+#jitsi-connect-button{
+  margin-top:300px;
+}

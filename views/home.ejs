@@ -13,33 +13,43 @@
 
   <body>
     <div class="container-fluid">
-        <h1>La fièvre du tungstène!</h1>
+
       <div class="row">
+        <div class="col-6">
+          <h1>La fièvre du tungstène!</h1>
         <legend>Nouvelle salle</legend>
+
+          <div class="row">
         <form id="create-room" action="" class="form-inline">
           <div class="form-group mb-2">
           <input id="new-room-name" autocomplete="off" class="form-control" placeholder="Nom de la salle"/>
           <input id="new-room-password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
-
           </div>
           <button class="btn btn-primary mb-2">
           <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
         </button>
         </form>
       </div>
+        <legend>Liste des salles salle</legend>
       <div id="rooms" class="row">
       </div>
-
-
     </div>
-
+    <div id="jitsi-container" class="col-6 text-center border" style="height:800px;">
+      <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+      <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+      Activer la visioconférence.
+    </button>
+    </div>
+    </div>
+  </div> <!-- container -->
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src='https://meet.jit.si/external_api.js'></script>
-    <script src="/ejs.min.js"></script>
+    <script src="/js/ejs.min.js"></script>
+    <script type="text/javascript" src="/js/jitsi-setup.js"></script>
     <script type="text/javascript">
         var templates = <%- JSON.stringify(templates) %>; // Get templates object
     </script>
@@ -56,6 +66,11 @@
     var joinRoom = function(roomId){
       io.emit('joinRoom',roomId)
     }
+    $('#jitsi-connect-button').click(function(){
+      $('#jitsi-connect-button').addClass('d-none');
+      var jitsiContainer = document.getElementById("jitsi-container");
+      jitsiConnect(jitsiContainer, 'onlinedarts', '');
+    })
 
     $(function () {
 
