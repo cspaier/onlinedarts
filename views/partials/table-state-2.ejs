@@ -1,13 +1,13 @@
 <table class="table table-bordered table-hover">
   <thead>
     <tr>
-      <th></th>
+      <th><a href="/"><span class="oi oi-home"></span></a></th>
       <% game.players.forEach((player) => { %>
         <th class="player-<%= player.name %>-cell"><%= player.name %></th>
         <% }); %>
-        <th class="game-state-2"> × 1</th>
-        <th class="game-state-2">× 2</th>
-        <th class="game-state-2">× 3</th>
+        <th class="game-state-2 auth"> × 1</th>
+        <th class="game-state-2 d-none auth">× 2</th>
+        <th class="game-state-2 d-none auth">× 3</th>
     </tr>
   </thead>
   <tbody>

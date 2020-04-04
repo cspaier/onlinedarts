@@ -1,0 +1,17 @@
+<% rooms.forEach((room) => { %>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">
+        <%= room.name %>
+        <% if (!room.public){ %>
+          <span class="oi oi-lock-locked float-right"></span>
+        <% } %>
+      </div>
+      <div class="card-body">
+        <a href="/room/<%= room.id %>"class="btn btn-success" data-id="<%= room.id %>" onclick="joinRoom(<%= room.id %>)">
+          Join!
+        </a>
+      </div>
+    </div>
+  </div>
+<% }); %>

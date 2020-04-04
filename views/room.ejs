@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Onlinedarts</title>
+    <title>Onlinedarts - <%= room.name %></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
@@ -19,11 +19,16 @@
         </div>
       </div>
       <!--Jitsi container -->
-      <div id="jitsi-container" class="col-md-6">
+      <div id="jitsi-container" class="auth col-md-6 text-center border">
+          <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+            <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+            Activer la visioconférence.
+          </button>
       </div>
+
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 auth d-none">
       <!-- Controls-->
         <div class="game-state-0">
           <div class="row">
@@ -91,7 +96,20 @@
 
           </div>
       </div><!-- row -->
-    </div><!-- col-md-6 -->
+
+    </div><!-- auth col-md-6 -->
+
+    <div id="login" class="col-md-6">
+      <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
+      <form id="password-form" action="" class="form-inline">
+        <div class="form-group mb-2">
+        <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+        </div>
+        <button class="btn btn-primary mb-2">
+        <span class="oi oi-check" title="plus" aria-hidden="true"></span>
+      </button>
+      </form>
+    </div>
     <div class="col-md-6">
       <div id="alert" class="alert alert-info text-center">
         <div class="spinner-border text-warning float-left" role="status">
@@ -110,14 +128,17 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="/ejs.min.js"></script>
+    <script src="/js/ejs.min.js"></script>
     <script src='https://meet.jit.si/external_api.js'></script>
+    <script type="text/javascript" src="/js/jitsi-setup.js"></script>
     <script type="text/javascript">
         var templates = <%- JSON.stringify(templates) %>; // Get templates object
     </script>
 
     <script>
-    var game = <%- JSON.stringify(game) %>;
+    var room = <%- JSON.stringify(room) %>;
+    var game = room.game;
+    var auth = room.public;
     // darts est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
     var darts = []
@@ -146,24 +167,31 @@
     }
 
     var refreshForGameState = function(){
+      // affiche elements en fonction du auth
+      if (auth){
+        $('#login').addClass('d-none')
+        $('.auth').removeClass('d-none')
+      } else {
+        $('.auth').addClass('d-none')
+      }
       // On cache/affiche les élèments en fonction du game_state
       if (game.state == 0){
-        $('.game-state-1').hide();
-        $('.game-state-2').hide();
-        $('.game-state-3').hide();
-        $('.game-state-0').show();
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-2').addClass('d-none');
+        $('.game-state-3').addClass('d-none');
+        $('.game-state-0').removeClass('d-none');
       }
       else if (game.state == 2) {
-        $('.game-state-0').hide();
-        $('.game-state-1').hide();
-        $('.game-state-3').hide();
-        $('.game-state-2').show();
+        $('.game-state-0').addClass('d-none');
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-3').addClass('d-none');
+        $('.game-state-2').removeClass('d-none');
       }
       else if (game.state == 3) {
-        $('.game-state-0').hide();
-        $('.game-state-1').hide();
-        $('.game-state-2').hide();
-        $('.game-state-3').show();
+        $('.game-state-0').addClass('d-none');
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-2').addClass('d-none');
+        $('.game-state-3').removeClass('d-none');
       }
     }
 
@@ -250,44 +278,63 @@ var DartButtonsclick = function(el){
     $(function () {
       refreshForGameState();
       var socket = io();
+      socket.emit('join-room', room.id);
 
+      $('#password-form').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('login', {password: $('#password').val(), roomId: room.id} );
+        $('#password').val('');
+        return false;
+      });
 
       $('#new-player').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        socket.emit('new-player', $('#new-player-name').val());
+        socket.emit('new-player', {playerName: $('#new-player-name').val(), roomId: room.id} );
         $('#new-player-name').val('');
         return false;
       });
 
       $('#remove-player').click(function(e){
-        socket.emit('remove-player');
+        socket.emit('remove-player', {roomId: room.id});
         return false;
       });
 
       $('#start-game').click(function(e){
-        socket.emit('start-game');
+        socket.emit('start-game', {roomId: room.id});
         return false;
       });
       $('#valide-volee').click(function(e){
-        socket.emit('valide-volee', darts);
+        socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       });
 
       $('#fromage').click(function(e){
         darts = []
-        socket.emit('valide-volee', darts);
+        socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       });
 
       $('#cancel-volee').click(function(e){
-        socket.emit('cancel-volee');
+        socket.emit('cancel-volee', {roomId: room.id});
         return false;
       });
 
       $('#new-game').click(function(e){
-        socket.emit('new-game');
+        socket.emit('new-game', {roomId: room.id});
         return false;
       });
+
+      $('#jitsi-connect-button').click(function(){
+        socket.emit('jitsi-connect', {roomId: room.id});
+      });
+      // socket receiver
+      socket.on('login', function(gameFromServer){
+        game = gameFromServer;
+        auth = true;
+        $('#alert').html(game.alert)
+        refreshForGameState()
+      });
+
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         $('#alert').html(game.alert)
@@ -303,9 +350,8 @@ var DartButtonsclick = function(el){
         refreshForGameState()
       });
 
-      socket.on('update-game', function(game_from_server){
-        game = game_from_server;
-        console.log(game)
+      socket.on('update-game', function(gameFromServer){
+        game = gameFromServer;
         darts = []
         updateVoleePreview(darts)
         $('#alert').html(game.alert)
@@ -313,6 +359,14 @@ var DartButtonsclick = function(el){
         refreshForGameState()
         refreshVolees()
       });
+
+      socket.on('jitsi-connect', function(datas){
+        var jitsiContainer = document.getElementById("jitsi-container");
+        $('#jitsi-connect-button').addClass('d-none');
+        console.log(datas.jitsiRoom)
+        jitsiConnect(jitsiContainer, datas.jitsiRoom);
+      });
+
       socket.on('disconnect',function(reason){
         var alert = '<div class="spinner-border text-warning float-left" role="status">'
         alert += '<span class="sr-only">Loading...</span></div>'
@@ -321,25 +375,6 @@ var DartButtonsclick = function(el){
       });
     });
   </script>
-  <script>
-    //Jitsi setup
-    //https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
-    var domain = "meet.jit.si";
-    var options = {
-      roomName: "onlinedarts",
-      width: "100%",
-      //height: "auto",
-      parentNode: document.getElementById("jitsi-container"),
-      configOverwrite: {},
-      interfaceConfigOverwrite: {
-        TOOLBAR_BUTTONS: [
-          'microphone', 'camera', 'closedcaptions', 'fullscreen',
-          'fodeviceselection', 'profile', 'chat', 'settings',
-          'videoquality', 'filmstrip', 'tileview',
-        ],
-      }
-  }
-  var api = new JitsiMeetExternalAPI(domain, options);
-  </script>
+
   </body>
 </html>
