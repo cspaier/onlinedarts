@@ -129,7 +129,7 @@ io.on('connection', function(socket){
     if (!room){
       return false
     }
-    game.cancelVolee()
+    room.game.cancelVolee()
     io.to(room.id).emit('update-game', room.game)
   });
 
