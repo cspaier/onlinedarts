@@ -20,7 +20,7 @@ var homeTemplates = {
 }
 
 var rooms = new Rooms;
-rooms.createNewRoom("test","")
+rooms.createNewRoom("test","c")
 
 // Les vues
 
@@ -50,22 +50,31 @@ io.on('connection', function(socket){
       return false
     }
     socket.join(room.id)
-    io.emit('update-game', room.game);
+    socket.leave('home')
+    io.to(socket.id).emit('update-game', room.game);
   });
 
-  // home
 
   socket.on('create-room', function(datas){
     var room = rooms.createNewRoom(datas.roomName, datas.password)
-    io.emit('update-rooms', rooms.toClient());
+    io.to('home').emit('update-rooms', rooms.toClient());
   });
 
 
   // game things
   // all io.emit will pass game object. This way we are clear game state is always same for all clients
-  socket.on('new-player', function(datas){
+  socket.on('login', function(datas){
     var room = rooms.getRoomById(datas.roomId)
     if (room == undefined){
+      return false
+    }
+    room.login(datas.password, socket.id)
+    io.to(socket.id).emit('login', room.game);
+  });
+
+  socket.on('new-player', function(datas){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     room.game.createPlayer(datas.playerName);
@@ -73,8 +82,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('remove-player', function(datas){
-    var room = rooms.getRoomById(datas.roomId)
-    if (room == undefined){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     room.game.removePlayer();
@@ -82,8 +91,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('start-game', function(datas){
-    var room = rooms.getRoomById(datas.roomId)
-    if (room == undefined){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     room.game.startGame()
@@ -91,8 +100,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('valide-volee', function(datas){
-    var room = rooms.getRoomById(datas.roomId)
-    if (room == undefined){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     var darts = datas.darts
@@ -111,8 +120,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('cancel-volee', function(datas){
-    var room = rooms.getRoomById(datas.roomId)
-    if (room == undefined){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     game.cancelVolee()
@@ -120,8 +129,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('new-game', function(datas){
-    var room = rooms.getRoomById(datas.roomId)
-    if (room == undefined){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
       return false
     }
     room.game = new Game()

@@ -12,9 +12,19 @@ function Room(id, name, password){
       name: this.name,
       game: this.game,
       private: this.password.length > 0,
-      id: this.id
+      id: this.id,
+    }
   }
+
+  this.login = function(password, id){
+    if (password == this.password){
+      this.sockets.push(id);
+      return true;
+    } else {
+      return false;
+    }
   }
+
   this.isAuth = function(id){
     return (this.password.length == 0) || (this.sockets.includes(id))
   }
@@ -39,6 +49,17 @@ class Rooms extends Array {
 
   getRoomById(id){
     return this.find(r => r.id == id)
+  }
+
+  getRoomAndCheckAuth(roomId, socketId){
+    // try to get room by its id and check if sockit is auth
+    // returns the room if both check pass and false otherwise
+    var room = this.getRoomById(roomId)
+    if ((room != undefined) && (room.isAuth(socketId))){
+      return room
+    } else {
+      return false
+    }
   }
 }
 

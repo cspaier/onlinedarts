@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 auth">
+      <div class="col-md-6 auth d-none">
       <!-- Controls-->
         <div class="game-state-0">
           <div class="row">
@@ -91,8 +91,20 @@
 
           </div>
       </div><!-- row -->
-    </div><!-- col-md-6 -->
 
+    </div><!-- auth col-md-6 -->
+
+    <div id="login" class="col-md-6">
+      <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
+      <form id="password-form" action="" class="form-inline">
+        <div class="form-group mb-2">
+        <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+        </div>
+        <button class="btn btn-primary mb-2">
+        <span class="oi oi-check" title="plus" aria-hidden="true"></span>
+      </button>
+      </form>
+    </div>
     <div class="col-md-6">
       <div id="alert" class="alert alert-info text-center">
         <div class="spinner-border text-warning float-left" role="status">
@@ -120,6 +132,7 @@
     <script>
     var room = <%- JSON.stringify(room) %>;
     var game = room.game;
+    var auth = false;
     // darts est une liste de longueur <= 3
     // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
     var darts = []
@@ -148,24 +161,31 @@
     }
 
     var refreshForGameState = function(){
+      // affiche elements en fonction du auth
+      if (auth){
+        $('#login').addClass('d-none')
+        $('.auth').removeClass('d-none')
+      } else {
+        $('.auth').addClass('d-none')
+      }
       // On cache/affiche les élèments en fonction du game_state
       if (game.state == 0){
-        $('.game-state-1').hide();
-        $('.game-state-2').hide();
-        $('.game-state-3').hide();
-        $('.game-state-0').show();
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-2').addClass('d-none');
+        $('.game-state-3').addClass('d-none');
+        $('.game-state-0').removeClass('d-none');
       }
       else if (game.state == 2) {
-        $('.game-state-0').hide();
-        $('.game-state-1').hide();
-        $('.game-state-3').hide();
-        $('.game-state-2').show();
+        $('.game-state-0').addClass('d-none');
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-3').addClass('d-none');
+        $('.game-state-2').removeClass('d-none');
       }
       else if (game.state == 3) {
-        $('.game-state-0').hide();
-        $('.game-state-1').hide();
-        $('.game-state-2').hide();
-        $('.game-state-3').show();
+        $('.game-state-0').addClass('d-none');
+        $('.game-state-1').addClass('d-none');
+        $('.game-state-2').addClass('d-none');
+        $('.game-state-3').removeClass('d-none');
       }
     }
 
@@ -254,6 +274,13 @@ var DartButtonsclick = function(el){
       var socket = io();
       socket.emit('join-room', room.id);
 
+      $('#password-form').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('login', {password: $('#password').val(), roomId: room.id} );
+        $('#password').val('');
+        return false;
+      });
+
       $('#new-player').submit(function(e){
         e.preventDefault(); // prevents page reloading
         socket.emit('new-player', {playerName: $('#new-player-name').val(), roomId: room.id} );
@@ -292,6 +319,13 @@ var DartButtonsclick = function(el){
       });
 
       // socket receiver
+      socket.on('login', function(gameFromServer){
+        game = gameFromServer;
+        auth = true;
+        $('#alert').html(game.alert)
+        refreshForGameState()
+      });
+
       socket.on('change-players', function(game_from_server){
         game = game_from_server;
         $('#alert').html(game.alert)
@@ -307,8 +341,8 @@ var DartButtonsclick = function(el){
         refreshForGameState()
       });
 
-      socket.on('update-game', function(game_from_server){
-        game = game_from_server;
+      socket.on('update-game', function(gameFromServer){
+        game = gameFromServer;
         darts = []
         updateVoleePreview(darts)
         $('#alert').html(game.alert)
