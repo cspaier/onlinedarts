@@ -32,4 +32,5 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 .room-card-footer{
   font-size: :80%;
+  margin-top: -16px;
 }
