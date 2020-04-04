@@ -1,17 +1,40 @@
 <% rooms.forEach((room) => { %>
   <div class="col-4">
     <div class="card">
-      <div class="card-header">
+      <a href="/room/<%= room.id %>" class="card-header">
         <%= room.name %>
         <% if (!room.public){ %>
           <span class="oi oi-lock-locked float-right"></span>
         <% } %>
+      </a>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <% room.game.players.forEach((player) => { %>
+                <th><%= player.name %></th>
+                <% }); %>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i < 8; i++) {%>
+              <tr>
+                <th scopre="row">
+                  <%= room.game.scoresList[i] %>
+               </th>
+                <% room.game.players.forEach((player) => { %>
+                  <td><%= player.scores[i] %></td>
+                <% }); %>
+
+              </tr>
+            <% }; %>
+          </tbody>
+        </table>
       </div>
-      <div class="card-body">
-        <a href="/room/<%= room.id %>"class="btn btn-success" data-id="<%= room.id %>" onclick="joinRoom(<%= room.id %>)">
-          Join!
-        </a>
-      </div>
+      <div class="card-footer text-center">
+        <%- room.game.alert %>
+        </div>
     </div>
   </div>
 <% }); %>
