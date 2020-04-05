@@ -4,6 +4,9 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 
 #volees{
+
+/* Application elements */
+#volees {
   overflow-y: auto;
   max-height: 150px;
 }
@@ -12,25 +15,25 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
   font-size:240%;
   text-align: center;
 }
-.dart-button{
+
+.dart-button {
   width:80%;
  font-size: 1.5rem;
 }
 
-#volees > li{
+#volees > li {
   padding-left: 0px;
 }
 
-#jitsi-container{
-  margin-bottom: 16px;
-}
-#alert{
+#alert {
   font-size: 200%;
 }
-#jitsi-connect-button{
+
+#jitsi-connect-button {
   margin-top:300px;
 }
-.room-card-footer{
+
+.room-card-footer {
   font-size: :80%;
   margin-top: -16px;
 }
