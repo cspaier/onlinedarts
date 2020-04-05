@@ -1,22 +1,58 @@
-# onlinedarts
-This  tool allows you to play a game of cricket online with your friends.
+# Onlinedarts
+This application allows you to play a game of dart online with your friends.
 
-It uses node.js, express.js and socket.io for the dart app and Jitsi api for the visio.
+It uses Node.js, [Express.js](https://expressjs.com/) and [Socket.io](https://socket.io/) for the dart application and [Jitsi](https://meet.jit.si/) API for video chat.
 
+- - -
 
+## 📝 Table of contents
+- [**Prerequisites**](#prerequisites)
+- [**Commands**](#commands)
+- [**Project structure**](#project-structure)
+- [**Authors**](#authors)
+- [**Contributing**](#contributing)
+- [**License**](#license)
 
-## How to set up dev environment
-On a debian with node 8.10.
-If you don't have node installed already `sudo apt install nodejs npm` should work.
+- - -
 
-1. clone the repo: `git clone https://github.com/cspaier/onlinedarts.git`
-2. go into the directory: `cd onlinedarts`
-3. install dependencies: `npm install`
-4. run the server: `nodemon index.js`. You should expect the following output:
+<a name="prerequisites"></a>
+## ⚙️ Prerequisites
+- [**asdf**](https://github.com/asdf-vm/asdf)
+- [**Make**](https://www.gnu.org/software/make/)
+- [**Node.js**](https://nodejs.org)
+
+<a name="commands"></a>
+## ⌨️ Commands
+### Serve
+```makefile
+## Serve site at http://localhost:8000
+
+make
 ```
-[nodemon] to restart at any time, enter `rs`
-[nodemon] watching dir(s): *.*
-[nodemon] watching extensions: js,mjs,json
-[nodemon] starting `node index.js
+
+💡 This command will also **install dependencies** on first run and when `package.json` or `package-lock.json` files are updated.
+
+### Help
+```makefile
+## List available commands
+
+make help
 ```
-Visit http://localhost:8000/ and you are good to go!
+
+<a name="project-structure"></a>
+## 🗄️ Project structure
+```
+🚧 Create Project structure using tree command (see example: https://github.com/wearemd/static-site-starter#project-structure)
+```
+
+<a name="authors"></a>
+## ✍️ Authors
+- [**@cspaier**](https://github.com/cspaier) - Idea and initial work
+
+<a name="contributing"></a>
+## 🤜🤛 Contributing
+**Contributions, issues and feature requests are welcome!** See the list of [contributors](../../graphs/contributors) who participated in this project.
+
+<a name="license"></a>
+## 📄 License
+**Onlinedarts** is licensed under the [GNU General Public License v3.0](LICENSE).
