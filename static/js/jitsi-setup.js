@@ -14,7 +14,6 @@ function jitsiConnect(el, jitsiRoom, password){
           'fodeviceselection', 'profile', 'chat', 'settings',
           'videoquality', 'filmstrip', 'tileview',
         ],
-        MOBILE_APP_PROMO: false,
         GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
       }
   }
