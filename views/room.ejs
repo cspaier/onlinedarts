@@ -7,123 +7,115 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
-
-
   </head>
-
   <body>
     <div class="container-fluid">
       <div class="row">
-      <div class="col-md-6">
-        <div id="players-table">
-          <%- include('partials/table-state-0',{game:game}); %>
-        </div>
-      </div>
-      <!--Jitsi container -->
-      <div id="jitsi-container" class="auth col-md-6 text-center border">
-          <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
-            <span class="oi oi-video" title="plus" aria-hidden="true"></span>
-            Activer la visioconférence.
-          </button>
-      </div>
-
-    </div>
-    <div class="row">
-      <div class="col-md-6 auth d-none">
-      <!-- Controls-->
-        <div class="game-state-0">
-          <div class="row">
-            <div class="col">
-              <form id="new-player" action="" class="form-inline">
-                <div class="form-group mb-2">
-                <input id="new-player-name" autocomplete="off" class="form-control" placeholder="nouveau joueur"/>
-                </div>
-                <button class="btn btn-primary mb-2">
-                <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
-              </button>
-              </form>
+        <div class="col-md-6">
+          <div id="players-table">
+            <%- include('partials/table-state-0',{game:game}); %>
           </div>
-          <div class="col">
-            <button id="remove-player" class="btn btn-danger">
-              <span class="oi oi-minus" title="plus" aria-hidden="true"></span>
+        </div>
+        <!--Jitsi container -->
+        <div id="jitsi-container" class="auth col-md-6 text-center border">
+            <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+              <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+              Activer la visioconférence.
             </button>
-          </div>
         </div>
-        <hr/>
-        <div class="row">
-          <div class="col">
-          <button id="start-game" class="btn btn-success btn-lg ">
-            <span class="oi oi-media-play" title="plus" aria-hidden="true"></span> Commencer la partie
-          </button>
-        </div>
-        </div>
-
-      </div><!-- game-state-0 -->
-
+      </div>
       <div class="row">
-          <div class="col game-state-2">
-            <div id="volee-preview-card" class="card">
-              <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
-              <ul id="volee-preview-list" class="list-group list-group-flush">
-                <li class="list-group-item">Fromage?</li>
-              </ul>
+        <div class="col-md-6 auth d-none">
+          <!-- Controls-->
+          <div class="game-state-0">
+            <div class="row">
+              <div class="col">
+                <form id="new-player" action="" class="form-inline">
+                  <div class="form-group mb-2">
+                    <input id="new-player-name" autocomplete="off" class="form-control" placeholder="nouveau joueur"/>
+                  </div>
+                  <button class="btn btn-primary mb-2">
+                    <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+                  </button>
+                </form>
+              </div>
+              <div class="col">
+                <button id="remove-player" class="btn btn-danger">
+                  <span class="oi oi-minus" title="plus" aria-hidden="true"></span>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="col-2 game-state-2">
-            <div>
-              <button class="btn btn-success btn-lg" id="valide-volee">
-                <span class="oi oi-check" title="Valider" aria-hidden="true"></span> Valider
+
+            <hr/>
+
+            <div class="row">
+              <div class="col">
+                <button id="start-game" class="btn btn-success btn-lg ">
+                  <span class="oi oi-media-play" title="plus" aria-hidden="true"></span> Commencer la partie
+                </button>
+              </div>
+            </div>
+          </div><!-- game-state-0 -->
+
+          <div class="row">
+            <div class="col game-state-2">
+              <div id="volee-preview-card" class="card">
+                <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
+                <ul id="volee-preview-list" class="list-group list-group-flush">
+                  <li class="list-group-item">Fromage?</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-2 game-state-2">
+              <div>
+                <button class="btn btn-success btn-lg" id="valide-volee">
+                  <span class="oi oi-check" title="Valider" aria-hidden="true"></span> Valider
+                </button>
+              </div>
+              <div>
+                <button class="btn btn-warning btn-xs mt-3" id="fromage">
+                  <span class="oi oi-trash" title="fromage" aria-hidden="true"></span> Fromage!
+                </button>
+              </div>
+            </div>
+            <div class="col-4 game-state-3">
+              <button class="btn btn-primary btn" id="new-game">
+                <span class="oi oi-media-play" title="new-game" aria-hidden="true"></span>
+                Nouvelle partie
               </button>
             </div>
-            <div>
-              <button class="btn btn-warning btn-xs mt-3" id="fromage">
-                <span class="oi oi-trash" title="fromage" aria-hidden="true"></span> Fromage!
+            <div class="col-2 game-state-2 game-state-3">
+              <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
+                <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
               </button>
             </div>
-          </div>
-          <div class="col-4 game-state-3">
-            <button class="btn btn-primary btn" id="new-game">
-              <span class="oi oi-media-play" title="new-game" aria-hidden="true"></span>
-              Nouvelle partie
+            <div class="col game-state-2 game-state-3">
+              <ul id="volees" class="list-group"></ul>
+            </div>
+          </div><!-- row -->
+        </div><!-- auth col-md-6 -->
+
+        <div id="login" class="col-md-6">
+          <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
+          <form id="password-form" action="" class="form-inline">
+            <div class="form-group mb-2">
+              <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+            </div>
+            <button class="btn btn-primary mb-2">
+              <span class="oi oi-check" title="plus" aria-hidden="true"></span>
             </button>
-          </div>
-          <div class="col-2 game-state-2 game-state-3">
-            <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
-              <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
-            </button>
-          </div>
-          <div class="col game-state-2 game-state-3">
-            <ul id="volees" class="list-group"></ul>
-
-          </div>
-      </div><!-- row -->
-
-    </div><!-- auth col-md-6 -->
-
-    <div id="login" class="col-md-6">
-      <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
-      <form id="password-form" action="" class="form-inline">
-        <div class="form-group mb-2">
-        <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+          </form>
         </div>
-        <button class="btn btn-primary mb-2">
-        <span class="oi oi-check" title="plus" aria-hidden="true"></span>
-      </button>
-      </form>
-    </div>
-    <div class="col-md-6">
-      <div id="alert" class="alert alert-info text-center">
-        <div class="spinner-border text-warning float-left" role="status">
-        <span class="sr-only">Loading...</span></div>
-        Connection au serveur...
-      </div>
-    </div>
+        <div class="col-md-6">
+          <div id="alert" class="alert alert-info text-center">
+            <div class="spinner-border text-warning float-left" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            Connection au serveur...
+          </div>
+        </div>
       </div><!-- row -->
-
-
-  </div><!-- container-fluid -->
-
-
+    </div><!-- container-fluid -->
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -136,121 +128,120 @@
         var templates = <%- JSON.stringify(templates) %>; // Get templates object
     </script>
 
-    <script>
-    var room = <%- JSON.stringify(room) %>;
-    var game = room.game;
-    var auth = room.public;
-    // darts est une liste de longueur <= 3
-    // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
-    var darts = []
+    <script type="text/javascript">
+      var room = <%- JSON.stringify(room) %>;
+      var game = room.game;
+      var auth = room.public;
+      // darts est une liste de longueur <= 3
+      // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
+      var darts = []
 
-    var dartsToString = function(darts){
-        // affichage d'une voléé. Retourne un string (html)
-        html=""
-        if (darts.length == 0){
-           html += '<span class="badge badge-warning">Fromage</span>'
+      var dartsToString = function(darts){
+          // affichage d'une voléé. Retourne un string (html)
+          html=""
+          if (darts.length == 0){
+             html += '<span class="badge badge-warning">Fromage</span>'
+          } else {
+            darts.forEach((dart, i) => {
+              if (i > 0){
+                html += ', '
+              }
+              if (dart.numeroTape == 6){
+                // Boulle!
+                var classList = ['', 'success', 'danger'];
+              } else {
+                var classList = ['', 'secondary', 'info', 'primary']
+              }
+              html += '<span class="badge badge-' + classList[dart.combo] + '">'
+              html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
+            });
+          }
+          return html
+      }
+
+      var refreshForGameState = function(){
+        // affiche elements en fonction du auth
+        if (auth){
+          $('#login').addClass('d-none')
+          $('.auth').removeClass('d-none')
         } else {
-          darts.forEach((dart, i) => {
-            if (i > 0){
-              html += ', '
-            }
-            if (dart.numeroTape == 6){
-              // Boulle!
-              var classList = ['', 'success', 'danger'];
-            } else {
-              var classList = ['', 'secondary', 'info', 'primary']
-            }
-            html += '<span class="badge badge-' + classList[dart.combo] + '">'
-            html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
-          });
+          $('.auth').addClass('d-none')
         }
-        return html
-    }
-
-    var refreshForGameState = function(){
-      // affiche elements en fonction du auth
-      if (auth){
-        $('#login').addClass('d-none')
-        $('.auth').removeClass('d-none')
-      } else {
-        $('.auth').addClass('d-none')
-      }
-      // On cache/affiche les élèments en fonction du game_state
-      if (game.state == 0){
-        $('.game-state-1').addClass('d-none');
-        $('.game-state-2').addClass('d-none');
-        $('.game-state-3').addClass('d-none');
-        $('.game-state-0').removeClass('d-none');
-      }
-      else if (game.state == 2) {
-        $('.game-state-0').addClass('d-none');
-        $('.game-state-1').addClass('d-none');
-        $('.game-state-3').addClass('d-none');
-        $('.game-state-2').removeClass('d-none');
-      }
-      else if (game.state == 3) {
-        $('.game-state-0').addClass('d-none');
-        $('.game-state-1').addClass('d-none');
-        $('.game-state-2').addClass('d-none');
-        $('.game-state-3').removeClass('d-none');
-      }
-    }
-
-    var refresPlayersTable = function(){
-      //recharge le tableau principal avec les nouvelles données
-      if (game.state == 0 || game.state == 3){
-        template = templates.tableState0
-        var html = ejs.render(template, { game: game });
-        $('#players-table').html(html);
-      }
-      if (game.state == 2){
-        template = templates.tableState2
-        var html = ejs.render(template, { game: game });
-        $('#players-table').html(html);
-
-        var activePlayerName = game.activePlayer.name
-        $('.player-'+ activePlayerName + '-cell').addClass('table-active')
-        $('#active-player-name').html(game.activePlayer.name);
-      }
-    }
-
-  var refreshVolees = function(){
-    var html = ""
-    for (var i = game.volees.length - 1; i >= 0; i--) {
-      var v = game.volees[i]
-      var round = i + 1
-      html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
-          html += dartsToString(v.darts)
-        html +='</li>'
-    }
-    $('#volees').html(html)
-  }
-
-
-    var updateVoleePreview = function(darts){
-      // met à jour le résumé de la volée
-      var html = '<li class="list-group-item">' + dartsToString(darts) + '</li>'
-      $('#volee-preview-list').html(html)
-      // Si la volee à plus de 3 lancés, on ajoute la classe warning
-      if (darts.length > 3){
-        $('#volee-preview-card').addClass("border-warning")
-          $('#valide-volee').prop("disabled", true);
-          $('#valide-volee').removeClass("btn-success")
-          $('#valide-volee').addClass("btn-secondary")
-      }
-      else{
-        $('#volee-preview-card').removeClass("border-warning")
-        if (darts.length >0){
-          $('#volee-preview-card').addClass("border-success")
+        // On cache/affiche les élèments en fonction du game_state
+        if (game.state == 0){
+          $('.game-state-1').addClass('d-none');
+          $('.game-state-2').addClass('d-none');
+          $('.game-state-3').addClass('d-none');
+          $('.game-state-0').removeClass('d-none');
         }
-        $('#valide-volee').prop("disabled", false);
-        $('#valide-volee').addClass("btn-success")
-        $('#valide-volee').removeClass("btn-secondary")
+        else if (game.state == 2) {
+          $('.game-state-0').addClass('d-none');
+          $('.game-state-1').addClass('d-none');
+          $('.game-state-3').addClass('d-none');
+          $('.game-state-2').removeClass('d-none');
+        }
+        else if (game.state == 3) {
+          $('.game-state-0').addClass('d-none');
+          $('.game-state-1').addClass('d-none');
+          $('.game-state-2').addClass('d-none');
+          $('.game-state-3').removeClass('d-none');
+        }
       }
 
-    }
+      var refresPlayersTable = function(){
+        //recharge le tableau principal avec les nouvelles données
+        if (game.state == 0 || game.state == 3){
+          template = templates.tableState0
+          var html = ejs.render(template, { game: game });
+          $('#players-table').html(html);
+        }
+        if (game.state == 2){
+          template = templates.tableState2
+          var html = ejs.render(template, { game: game });
+          $('#players-table').html(html);
 
-var DartButtonsclick = function(el){
+          var activePlayerName = game.activePlayer.name
+          $('.player-'+ activePlayerName + '-cell').addClass('table-active')
+          $('#active-player-name').html(game.activePlayer.name);
+        }
+      }
+
+      var refreshVolees = function(){
+        var html = ""
+        for (var i = game.volees.length - 1; i >= 0; i--) {
+          var v = game.volees[i]
+          var round = i + 1
+          html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
+              html += dartsToString(v.darts)
+            html +='</li>'
+        }
+        $('#volees').html(html)
+      }
+
+      var updateVoleePreview = function(darts){
+        // met à jour le résumé de la volée
+        var html = '<li class="list-group-item">' + dartsToString(darts) + '</li>'
+        $('#volee-preview-list').html(html)
+        // Si la volee à plus de 3 lancés, on ajoute la classe warning
+        if (darts.length > 3){
+          $('#volee-preview-card').addClass("border-warning")
+            $('#valide-volee').prop("disabled", true);
+            $('#valide-volee').removeClass("btn-success")
+            $('#valide-volee').addClass("btn-secondary")
+        }
+        else{
+          $('#volee-preview-card').removeClass("border-warning")
+          if (darts.length >0){
+            $('#volee-preview-card').addClass("border-success")
+          }
+          $('#valide-volee').prop("disabled", false);
+          $('#valide-volee').addClass("btn-success")
+          $('#valide-volee').removeClass("btn-secondary")
+        }
+
+      }
+
+      var DartButtonsclick = function(el){
         // le nombre initial de fois qu'il a tapé la zone dans ce volee
         var n_initial = $(el).data("n")
         // le numéro tapé
@@ -276,96 +267,95 @@ var DartButtonsclick = function(el){
 
       };
 
-    $(function () {
-      refreshForGameState();
-      var socket = io();
-      socket.emit('join-room', room.id);
+      $(function () {
+        refreshForGameState();
+        var socket = io();
+        socket.emit('join-room', room.id);
 
-      $('#password-form').submit(function(e){
-        e.preventDefault(); // prevents page reloading
-        socket.emit('login', {password: $('#password').val(), roomId: room.id} );
-        $('#password').val('');
-        return false;
-      });
+        $('#password-form').submit(function(e){
+          e.preventDefault(); // prevents page reloading
+          socket.emit('login', {password: $('#password').val(), roomId: room.id} );
+          $('#password').val('');
+          return false;
+        });
 
-      $('#new-player').submit(function(e){
-        e.preventDefault(); // prevents page reloading
-        socket.emit('new-player', {playerName: $('#new-player-name').val(), roomId: room.id} );
-        $('#new-player-name').val('');
-        return false;
-      });
+        $('#new-player').submit(function(e){
+          e.preventDefault(); // prevents page reloading
+          socket.emit('new-player', {playerName: $('#new-player-name').val(), roomId: room.id} );
+          $('#new-player-name').val('');
+          return false;
+        });
 
-      $('#remove-player').click(function(e){
-        socket.emit('remove-player', {roomId: room.id});
-        return false;
-      });
+        $('#remove-player').click(function(e){
+          socket.emit('remove-player', {roomId: room.id});
+          return false;
+        });
 
-      $('#start-game').click(function(e){
-        socket.emit('start-game', {roomId: room.id});
-        return false;
-      });
-      $('#valide-volee').click(function(e){
-        socket.emit('valide-volee', {darts: darts, roomId: room.id});
-        return false;
-      });
+        $('#start-game').click(function(e){
+          socket.emit('start-game', {roomId: room.id});
+          return false;
+        });
+        $('#valide-volee').click(function(e){
+          socket.emit('valide-volee', {darts: darts, roomId: room.id});
+          return false;
+        });
 
-      $('#fromage').click(function(e){
-        darts = []
-        socket.emit('valide-volee', {darts: darts, roomId: room.id});
-        return false;
-      });
+        $('#fromage').click(function(e){
+          darts = []
+          socket.emit('valide-volee', {darts: darts, roomId: room.id});
+          return false;
+        });
 
-      $('#cancel-volee').click(function(e){
-        socket.emit('cancel-volee', {roomId: room.id});
-        return false;
-      });
+        $('#cancel-volee').click(function(e){
+          socket.emit('cancel-volee', {roomId: room.id});
+          return false;
+        });
 
-      $('#new-game').click(function(e){
-        socket.emit('new-game', {roomId: room.id});
-        return false;
-      });
+        $('#new-game').click(function(e){
+          socket.emit('new-game', {roomId: room.id});
+          return false;
+        });
 
-      $('#jitsi-connect-button').click(function(){
-        socket.emit('jitsi-connect', {roomId: room.id});
-      });
-      // socket receiver
-      socket.on('login', function(gameFromServer){
-        game = gameFromServer;
-        auth = true;
-        $('#alert').html(game.alert)
-        refreshForGameState()
-      });
+        $('#jitsi-connect-button').click(function(){
+          socket.emit('jitsi-connect', {roomId: room.id});
+        });
+        // socket receiver
+        socket.on('login', function(gameFromServer){
+          game = gameFromServer;
+          auth = true;
+          $('#alert').html(game.alert)
+          refreshForGameState()
+        });
 
-      socket.on('change-players', function(game_from_server){
-        game = game_from_server;
-        $('#alert').html(game.alert)
-        refresPlayersTable()
-      });
+        socket.on('change-players', function(game_from_server){
+          game = game_from_server;
+          $('#alert').html(game.alert)
+          refresPlayersTable()
+        });
 
-      socket.on('update-game', function(gameFromServer){
-        game = gameFromServer;
-        darts = []
-        updateVoleePreview(darts)
-        $('#alert').html(game.alert)
-        refresPlayersTable()
-        refreshForGameState()
-        refreshVolees()
-      });
+        socket.on('update-game', function(gameFromServer){
+          game = gameFromServer;
+          darts = []
+          updateVoleePreview(darts)
+          $('#alert').html(game.alert)
+          refresPlayersTable()
+          refreshForGameState()
+          refreshVolees()
+        });
 
-      socket.on('jitsi-connect', function(datas){
-        var jitsiContainer = document.getElementById("jitsi-container");
-        $('#jitsi-connect-button').addClass('d-none');
-        jitsiConnect(jitsiContainer, datas.jitsiRoom);
-      });
+        socket.on('jitsi-connect', function(datas){
+          var jitsiContainer = document.getElementById("jitsi-container");
+          $('#jitsi-connect-button').addClass('d-none');
+          jitsiConnect(jitsiContainer, datas.jitsiRoom);
+        });
 
-      socket.on('disconnect',function(reason){
-        var alert = '<div class="spinner-border text-warning float-left" role="status">'
-        alert += '<span class="sr-only">Loading...</span></div>'
-        alert += ' Connection au serveur perdue. En attente de reconnection.'
-        $('#alert').html(alert)
+        socket.on('disconnect',function(reason){
+          var alert = '<div class="spinner-border text-warning float-left" role="status">'
+          alert += '<span class="sr-only">Loading...</span></div>'
+          alert += ' Connection au serveur perdue. En attente de reconnection.'
+          $('#alert').html(alert)
+        });
       });
-    });
-  </script>
-
+    </script>
   </body>
 </html>
