@@ -1,145 +1,146 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Onlinedarts - <%= room.name %></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
-    <link href="/css/index.css" rel="stylesheet">
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-6">
-          <div id="players-table">
-            <%- include('partials/table-state-0',{game:game}); %>
-          </div>
-        </div>
-        <!--Jitsi container -->
-        <div id="jitsi-container" class="auth col-md-6 text-center border justify-content-center align-items-center row">
-          <div class="col">
-            <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
-              <span class="oi oi-video" title="plus" aria-hidden="true"></span>
-              Activer la visioconférence.
-            </button>
-          </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Onlinedarts - <%= room.name %></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+  <link href="/css/index.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div id="players-table">
+          <%- include('partials/table-state-0',{game:game}); %>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 auth d-none">
-          <!-- Controls-->
-          <div class="game-state-0">
-            <div class="row">
-              <div class="col">
-                <form id="new-player" action="" class="form-inline">
-                  <div class="form-group mb-2">
-                    <input id="new-player-name" autocomplete="off" class="form-control" placeholder="nouveau joueur"/>
-                  </div>
-                  <button class="btn btn-primary mb-2">
-                    <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
-                  </button>
-                </form>
-              </div>
-              <div class="col">
-                <button id="remove-player" class="btn btn-danger">
-                  <span class="oi oi-minus" title="plus" aria-hidden="true"></span>
-                </button>
-              </div>
-            </div>
-
-            <hr/>
-
-            <div class="row">
-              <div class="col">
-                <button id="start-game" class="btn btn-success btn-lg ">
-                  <span class="oi oi-media-play" title="plus" aria-hidden="true"></span> Commencer la partie
-                </button>
-              </div>
-            </div>
-          </div><!-- game-state-0 -->
-
+      <!--Jitsi container -->
+      <div id="jitsi-container" class="auth col-md-6 text-center border justify-content-center align-items-center row">
+        <div class="col">
+          <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+            <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+            Activer la visioconférence.
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 auth d-none">
+        <!-- Controls-->
+        <div class="game-state-0">
           <div class="row">
-            <div class="col game-state-2">
-              <div id="volee-preview-card" class="card">
-                <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
-                <ul id="volee-preview-list" class="list-group list-group-flush">
-                  <li class="list-group-item">Fromage?</li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-2 game-state-2">
-              <div>
-                <button class="btn btn-success btn-lg" id="valide-volee">
-                  <span class="oi oi-check d-md-none d-lg-inline" title="Valider" aria-hidden="true"></span> Valider
+            <div class="col-auto">
+              <form id="new-player" action="" class="form-inline">
+                <div class="form-group mb-2">
+                  <input id="new-player-name" autocomplete="off" class="form-control" placeholder="nouveau joueur"/>
+                </div>
+                <button class="btn btn-primary mb-2">
+                  <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
                 </button>
-              </div>
-              <div>
-                <button class="btn btn-warning btn-xs mt-3" id="fromage">
-                  <span class="oi oi-trash d-md-none d-lg-inline" title="fromage" aria-hidden="true"></span> Fromage!
-                </button>
-              </div>
+              </form>
             </div>
-            <div class="col-4 game-state-3">
-              <button class="btn btn-primary btn" id="new-game">
-                <span class="oi oi-media-play" title="new-game" aria-hidden="true"></span>
-                Nouvelle partie
+            <div class="col col-sm-2">
+              <button id="remove-player" class="btn btn-danger">
+                <span class="oi oi-minus" title="plus" aria-hidden="true"></span>
               </button>
             </div>
-            <div class="col-2 game-state-2 game-state-3">
-              <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
-                <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
+            <div class="w-100 d-lg-none"></div>
+            <div class="col">
+              <button id="start-game" class="btn btn-success float-right">
+                <span class="oi oi-media-play d-none d-xl-inline" title="plus" aria-hidden="true"></span>
+                <span class="d-none d-sm-inline"> Commencer la partie </span>
               </button>
             </div>
-            <div class="col game-state-2 game-state-3">
-              <ul id="volees" class="list-group"></ul>
-            </div>
-          </div><!-- row -->
-        </div><!-- auth col-md-6 -->
-
-        <div id="login" class="col-md-6">
-          <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
-          <form id="password-form" action="" class="form-inline">
-            <div class="form-group mb-2">
-              <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
-            </div>
-            <button class="btn btn-primary mb-2">
-              <span class="oi oi-check" title="plus" aria-hidden="true"></span>
-            </button>
-          </form>
-        </div>
-        <div class="col-md-6">
-          <div id="alert" class="alert alert-info text-center">
-            <div class="spinner-border text-warning float-left" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-            Connection au serveur...
           </div>
+
+
+
+
+        </div><!-- game-state-0 -->
+
+        <div class="row">
+          <div class="col game-state-2">
+            <div id="volee-preview-card" class="card">
+              <div class="card-header text-center">Volée de <b><span id="active-player-name"></span></b></div>
+              <ul id="volee-preview-list" class="list-group list-group-flush">
+                <li class="list-group-item">Fromage?</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-2 game-state-2">
+            <div>
+              <button class="btn btn-success btn-lg" id="valide-volee">
+                <span class="oi oi-check d-md-none d-lg-inline" title="Valider" aria-hidden="true"></span> Valider
+              </button>
+            </div>
+            <div>
+              <button class="btn btn-warning btn-xs mt-3" id="fromage">
+                <span class="oi oi-trash d-md-none d-lg-inline" title="fromage" aria-hidden="true"></span> Fromage!
+              </button>
+            </div>
+          </div>
+          <div class="col-4 game-state-3">
+            <button class="btn btn-primary btn" id="new-game">
+              <span class="oi oi-media-play" title="new-game" aria-hidden="true"></span>
+              Nouvelle partie
+            </button>
+          </div>
+          <div class="col-2 game-state-2 game-state-3">
+            <button class="btn btn-danger btn-xs float-right" id="cancel-volee">
+              <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="col game-state-2 game-state-3">
+            <ul id="volees" class="list-group"></ul>
+          </div>
+        </div><!-- row -->
+      </div><!-- auth col-md-6 -->
+
+      <div id="login" class="col-md-6">
+        <legend>Vous pouvez voir la partie mais il faut donner le mot de passe pour participer.</legend>
+        <form id="password-form" action="" class="form-inline">
+          <div class="form-group mb-2">
+            <input id="password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+          </div>
+          <button class="btn btn-primary mb-2">
+            <span class="oi oi-check" title="plus" aria-hidden="true"></span>
+          </button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <div id="alert" class="alert alert-info text-center">
+          <div class="spinner-border text-warning float-left" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          Connection au serveur...
         </div>
-      </div><!-- row -->
-    </div><!-- container-fluid -->
+      </div>
+    </div><!-- row -->
+  </div><!-- container-fluid -->
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="/js/ejs.min.js"></script>
-    <script src='https://meet.jit.si/external_api.js'></script>
-    <script type="text/javascript" src="/js/jitsi-setup.js"></script>
-    <script type="text/javascript" src="/js/room.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="/js/ejs.min.js"></script>
+  <script src='https://meet.jit.si/external_api.js'></script>
+  <script type="text/javascript" src="/js/jitsi-setup.js"></script>
+  <script type="text/javascript" src="/js/room.js"></script>
 
-    <script type="text/javascript">
-        var templates = <%- JSON.stringify(templates) %>; // Get templates object
-    </script>
+  <script type="text/javascript">
+  var templates = <%- JSON.stringify(templates) %>; // Get templates object
+  </script>
 
-    <script type="text/javascript">
-      var room = <%- JSON.stringify(room) %>;
-      var game = room.game;
-      var auth = room.public;
-      // darts est une liste de longueur <= 3
-      // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
-      var darts = []
-    </script>
+  <script type="text/javascript">
+  var room = <%- JSON.stringify(room) %>;
+  var game = room.game;
+  var auth = room.public;
+  // darts est une liste de longueur <= 3
+  // [{numeroTape: 18, combo: 2},{numeroTape:B, combo:1}] sera un double 18 suivie d'une verte
+  var darts = []
+  </script>
 
-  </body>
+</body>
 </html>
