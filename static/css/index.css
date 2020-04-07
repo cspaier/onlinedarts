@@ -36,3 +36,6 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
   font-size: :80%;
   margin-top: -16px;
 }
+#jitsi-container{
+  margin-bottom: 16px;
+}
