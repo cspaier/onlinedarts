@@ -1,24 +1,24 @@
 var dartsToString = function(darts){
-    // affichage d'une voléé. Retourne un string (html)
-    html=""
-    if (darts.length == 0){
-       html += '<span class="badge badge-warning">Fromage</span>'
-    } else {
-      darts.forEach((dart, i) => {
-        if (i > 0){
-          html += ', '
-        }
-        if (dart.numeroTape == 6){
-          // Boulle!
-          var classList = ['', 'success', 'danger'];
-        } else {
-          var classList = ['', 'secondary', 'info', 'primary']
-        }
-        html += '<span class="badge badge-' + classList[dart.combo] + '">'
-        html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
-      });
-    }
-    return html
+  // affichage d'une voléé. Retourne un string (html)
+  html=""
+  if (darts.length == 0){
+    html += '<span class="badge badge-warning">Fromage</span>'
+  } else {
+    darts.forEach((dart, i) => {
+      if (i > 0){
+        html += ', '
+      }
+      if (dart.numeroTape == 6){
+        // Boulle!
+        var classList = ['', 'success', 'danger'];
+      } else {
+        var classList = ['', 'secondary', 'info', 'primary']
+      }
+      html += '<span class="badge badge-' + classList[dart.combo] + '">'
+      html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
+    });
+  }
+  return html
 }
 
 var refreshForGameState = function(){
@@ -74,8 +74,8 @@ var refreshVolees = function(){
     var v = game.volees[i]
     var round = i + 1
     html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
-        html += dartsToString(v.darts)
-      html +='</li>'
+    html += dartsToString(v.darts)
+    html +='</li>'
   }
   $('#volees').html(html)
 }
@@ -87,9 +87,9 @@ var updateVoleePreview = function(darts){
   // Si la volee à plus de 3 lancés, on ajoute la classe warning
   if (darts.length > 3){
     $('#volee-preview-card').addClass("border-warning")
-      $('#valide-volee').prop("disabled", true);
-      $('#valide-volee').removeClass("btn-success")
-      $('#valide-volee').addClass("btn-secondary")
+    $('#valide-volee').prop("disabled", true);
+    $('#valide-volee').removeClass("btn-success")
+    $('#valide-volee').addClass("btn-secondary")
   }
   else{
     $('#volee-preview-card').removeClass("border-warning")
@@ -216,5 +216,17 @@ $(function () {
     alert += '<span class="sr-only">Loading...</span></div>'
     alert += ' Connection au serveur perdue. En attente de reconnection.'
     $('#alert').html(alert)
+  });
+
+  var splitobj = Split(["#game-col","#jitsi-container"], {
+    elementStyle: function (dimension, size, gutterSize) {
+      $(window).trigger('resize'); // Optional
+      return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
+    },
+    gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+    sizes: [50,50],
+    minSize: 300,
+    gutterSize: 20,
+    cursor: 'col-resize'
   });
 });

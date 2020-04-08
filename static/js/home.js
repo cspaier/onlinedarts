@@ -1,5 +1,5 @@
 var switchTabs = function(tabName){
-    $('#roomTab a[href="#'+ tabName + '"]').tab('show')
+  $('#roomTab a[href="#'+ tabName + '"]').tab('show')
 }
 
 $(function () {
@@ -34,5 +34,17 @@ $(function () {
 
   socket.on('update-rooms', function(rooms){
     updateRooms(rooms);
+  });
+
+  var splitobj = Split(["#home-col","#jitsi-container"], {
+    elementStyle: function (dimension, size, gutterSize) {
+      $(window).trigger('resize'); // Optional
+      return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
+    },
+    gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+    sizes: [50,50],
+    minSize: 300,
+    gutterSize: 10,
+    cursor: 'col-resize'
   });
 });
