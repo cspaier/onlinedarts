@@ -40,6 +40,9 @@ function Room(id, name, password){
 class Rooms extends Array {
   createNewRoom(name, password){
     // create a new room with the given name and password.
+    if (this.length > 12){ // limit the number of rooms to 12
+      return false
+    }
     if (this.some(r => r.name == name)){
       // we already have a room with the same name.
       return false;
