@@ -27,7 +27,7 @@ $(function () {
     var password = $('#new-room-password').val();
     $('#new-room-name').val('')
     $('#new-room-password').val('')
-    switchTabs('roomTab')
+    switchTabs('roomsTab')
     socket.emit('create-room', {roomName: roomName, password:password});
     return false;
   });
