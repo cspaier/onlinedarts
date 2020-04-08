@@ -1,3 +1,7 @@
+var switchTabs = function(tabName){
+    $('#roomTab a[href="#'+ tabName + '"]').tab('show')
+}
+
 $(function () {
   var updateRooms = function(rooms){
     var template = templates.cardRoom
@@ -23,6 +27,7 @@ $(function () {
     var password = $('#new-room-password').val();
     $('#new-room-name').val('')
     $('#new-room-password').val('')
+    switchTabs('roomTab')
     socket.emit('create-room', {roomName: roomName, password:password});
     return false;
   });

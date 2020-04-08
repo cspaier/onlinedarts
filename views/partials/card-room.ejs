@@ -1,40 +1,47 @@
-<% rooms.forEach((room) => { %>
-  <div class="col-4 col-sm-6">
-    <div class="card">
-      <a href="/room/<%= room.id %>" class="card-header text-decoration-none">
-        <%= room.name %>
-        <% if (!room.public){ %>
-          <span class="oi oi-lock-locked float-right"></span>
-        <% } %>
-      </a>
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover table-sm">
-          <thead>
-            <tr>
-              <th></th>
-              <% room.game.players.forEach((player) => { %>
-                <th><%= player.name %></th>
-                <% }); %>
-            </tr>
-          </thead>
-          <tbody>
-            <% for(var i=0; i < 8; i++) {%>
-              <tr>
-                <th scopre="row">
-                  <%= room.game.scoresList[i] %>
-               </th>
-                <% room.game.players.forEach((player) => { %>
-                  <td><%= player.scores[i] %></td>
-                <% }); %>
+<% if (rooms.length == 0){ %>
+  <div class="alert">
 
-              </tr>
-            <% }; %>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer text-center room-card-footer">
-        <%- room.game.alert %>
-        </div>
-    </div>
+    Aucune salle pour l'instant.
+    Peut-être souhaitez vous en <a href="#" onclick="switchTabs('createRoomTab')">créer une?</a>
   </div>
-<% }); %>
+  <% } %>
+  <% rooms.forEach((room) => { %>
+    <div class="col-4 col-sm-6 mb-4">
+      <div class="card">
+        <a href="/room/<%= room.id %>" class="card-header text-decoration-none">
+          <%= room.name %>
+          <% if (!room.public){ %>
+            <span class="oi oi-lock-locked float-right"></span>
+            <% } %>
+          </a>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm">
+              <thead>
+                <tr>
+                  <th></th>
+                  <% room.game.players.forEach((player) => { %>
+                    <th><%= player.name %></th>
+                    <% }); %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i < 8; i++) {%>
+                    <tr>
+                      <th scopre="row">
+                        <%= room.game.scoresList[i] %>
+                      </th>
+                      <% room.game.players.forEach((player) => { %>
+                        <td><%= player.scores[i] %></td>
+                        <% }); %>
+
+                      </tr>
+                      <% }; %>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="card-footer text-center room-card-footer">
+                  <%- room.game.alert %>
+                </div>
+              </div>
+            </div>
+            <% }); %>
