@@ -29,7 +29,7 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 
 #alert {
-  font-size: 200%;
+    font-size: 2.5vw;
 }
 
 .room-card-footer {
