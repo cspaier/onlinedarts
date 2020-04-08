@@ -36,8 +36,14 @@ function Game(){
     };
 
     this.removePlayer = function(){
-      var player = this.players.pop()
-      this.alert = '<span class="oi oi-trash float-left" title="trash" aria-hidden="true"></span> Le joueur <b>' + player.name + '</b> a été supprimé.'
+      if (this.players.length > 0){
+        var player = this.players.pop()
+        this.alert = '<span class="oi oi-trash float-left" title="trash" aria-hidden="true"></span> Le joueur <b>' + player.name + '</b> a été supprimé.'
+        return true
+      } else {
+        this.alert = "Il n'y a pas de joueur à supprimer"
+        return false
+      }
     };
 
     this.scoreVolee = function(darts){
