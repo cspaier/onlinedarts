@@ -21,6 +21,8 @@ $(function () {
     e.preventDefault(); // prevents page reloading
     var roomName = $('#new-room-name').val();
     var password = $('#new-room-password').val();
+    $('#new-room-name').val('')
+    $('#new-room-password').val('')
     socket.emit('create-room', {roomName: roomName, password:password});
     return false;
   });
