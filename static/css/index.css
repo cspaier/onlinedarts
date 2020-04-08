@@ -39,3 +39,7 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 #jitsi-container{
   margin-bottom: 16px;
 }
+
+li >.alert{
+  padding: 15px 5px 15px 5px;
+}
