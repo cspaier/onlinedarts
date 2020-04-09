@@ -12,11 +12,22 @@ $(function () {
   var joinRoom = function(roomId){
     io.emit('joinRoom',roomId)
   }
+
+  var updateNames = function(chat){
+    html = ""
+    chat.users.forEach((user, i) => {
+      html += '<li class="list-group-item">' + user.name + '</li>'
+    });
+    console.log($('#users'))
+    $('#users').html(html)
+  }
+
   $('#jitsi-connect-button').click(function(){
     $('#jitsi-connect-button').addClass('d-none');
     var jitsiContainer = document.getElementById("jitsi-container");
     jitsiConnect(jitsiContainer, 'onlinedarts', '');
   })
+
   var socket = io();
 
   socket.emit('join-home')
@@ -32,9 +43,35 @@ $(function () {
     return false;
   });
 
+  $('#send-message').submit(function(e){
+    e.preventDefault(); // prevents page reloading
+    var message = $('#new-message').val();
+    $('#new-message').val('')
+    socket.emit('new-message', message);
+    return false;
+  });
+
+  $('#change-name').submit(function(e){
+    e.preventDefault(); // prevents page reloading
+    var name = $('#new-name').val()
+    $('#new-name').blur()
+    socket.emit('change-name', name)
+    return false;
+  })
+
   socket.on('update-rooms', function(rooms){
     updateRooms(rooms);
   });
+
+  socket.on('update-names', function(chat){
+    updateNames(chat)
+  });
+
+  socket.on('new-name', function(name){
+    $('#new-name').val('');
+    $('#new-name').attr("placeholder", name)
+  });
+
 
   var splitobj = Split(["#home-col","#jitsi-container"], {
     elementStyle: function (dimension, size, gutterSize) {
@@ -47,4 +84,4 @@ $(function () {
     gutterSize: 10,
     cursor: 'col-resize'
   });
-});
+});// $(function ()

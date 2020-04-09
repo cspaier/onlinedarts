@@ -8,6 +8,8 @@ var ejs = require('ejs');
 app.set('view engine', 'ejs');
 var Game = require('./game.js')
 var Rooms = require('./rooms.js')
+var Chat = require('./chat.js')
+
 
 // On va passer des templates au client
 fs = require('fs')
@@ -20,14 +22,14 @@ var homeTemplates = {
 }
 
 var rooms = new Rooms;
-
+var chat = new Chat;
 
 // Les vues
 
 app.get('/', function(req, res){
   // clear inactive rooms
   rooms = rooms.cleanInactives()
-  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates});
+  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
 });
 
 app.get('/room/:roomId', function(req, res){
@@ -35,7 +37,7 @@ app.get('/room/:roomId', function(req, res){
   if (room == undefined){
     res.redirect('/');
   }else{
-  res.render('room', {room:room.toClient(), game: room.game, templates: roomTemplates});
+    res.render('room', {room:room.toClient(), game: room.game, templates: roomTemplates});
   }
 });
 
@@ -43,11 +45,17 @@ app.get('/room/:roomId', function(req, res){
 // sockets
 
 io.on('connection', function(socket){
-  socket.on('join-home', function(){
-    socket.join('home');
-    io.to(socket.id).emit('update-rooms', rooms.toClient());
-  })
 
+  // connection to home
+  socket.on('join-home', function(){
+    var user = chat.createUser(socket.id)
+    socket.join('home');
+    io.to(socket.id).emit('new-name', user.name)
+    io.to('home').emit('update-names', chat)
+    io.to(socket.id).emit('update-rooms', rooms.toClient());
+  });
+
+  // connection to a room
   socket.on('join-room', function(roomId){
     var room = rooms.getRoomById(roomId)
     if (room == undefined){
@@ -161,7 +169,22 @@ io.on('connection', function(socket){
     }
     io.to(socket.id).emit('jitsi-connect', {jitsiRoom: room.jitsiRoom})
     io.to('home').emit('update-rooms', rooms.toClient());
+  });
 
+  // Chat events
+  socket.on('change-name', function(name){
+    if (chat.changeName(name, socket.id)){
+      io.to(socket.id).emit('new-name', name);
+      io.to('home').emit('update-names', chat);
+    }
+  });
+
+  socket.on('new-message', function(message){
+    chat.newMessage(message, socket.id)
+  });
+
+  socket.on('disconnect', function(){
+    chat.removeUser(socket.id)
   });
 
 });

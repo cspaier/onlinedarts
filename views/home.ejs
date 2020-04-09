@@ -46,17 +46,20 @@
           </form>
         </div>
       </div>
-  </div>
-</div>
+    </div><!-- col 10-->
+    <div class="col-12 align-self-end mb-2 h-20" id="chat">
+      <%- include('partials/chat',{chat:chat}); %>
+    </div>
+  </div><!-- homecol -->
 
-<div id="jitsi-container" class="col text-center justify-content-center align-items-center row jitsi-container m-0 p-0">
-  <div class="col">
-    <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
-      <span class="oi oi-video" title="plus" aria-hidden="true"></span>
-      Activer la visioconférence.
-    </button>
+  <div id="jitsi-container" class="col text-center justify-content-center align-items-center row jitsi-container m-0 p-0">
+    <div class="col">
+      <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+        <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+        Activer la visioconférence.
+      </button>
+    </div>
   </div>
-</div>
 </div>
 </div>
 
