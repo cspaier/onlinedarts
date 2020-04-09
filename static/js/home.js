@@ -18,8 +18,13 @@ $(function () {
     chat.users.forEach((user, i) => {
       html += '<li class="list-group-item">' + user.name + '</li>'
     });
-    console.log($('#users'))
     $('#users').html(html)
+  }
+
+  var updateMessages = function(chat){
+    var template = templates.messages
+    var html = ejs.render(template, { messages: chat.messages });
+    $('#messages').html(html)
   }
 
   $('#jitsi-connect-button').click(function(){
@@ -46,6 +51,9 @@ $(function () {
   $('#send-message').submit(function(e){
     e.preventDefault(); // prevents page reloading
     var message = $('#new-message').val();
+    if (message.length == 0){
+      return false;
+    }
     $('#new-message').val('')
     socket.emit('new-message', message);
     return false;
@@ -54,6 +62,7 @@ $(function () {
   $('#change-name').submit(function(e){
     e.preventDefault(); // prevents page reloading
     var name = $('#new-name').val()
+    console.log(name)
     $('#new-name').blur()
     socket.emit('change-name', name)
     return false;
@@ -68,10 +77,14 @@ $(function () {
   });
 
   socket.on('new-name', function(name){
+    console.log('here')
     $('#new-name').val('');
     $('#new-name').attr("placeholder", name)
   });
 
+  socket.on('new-message', function(chat){
+    updateMessages(chat)
+  });
 
   var splitobj = Split(["#home-col","#jitsi-container"], {
     elementStyle: function (dimension, size, gutterSize) {

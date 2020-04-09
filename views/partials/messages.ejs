@@ -1,0 +1,10 @@
+<% messages.forEach((message) => { %>
+<li class="list-group-item row d-flex no-gutter m-0 p-0">
+  <div class="col-2 alert alert-secondary m-0 p-0">
+    <%= message.userName %>
+    </div>
+    <div class="col-10">
+      <%= message.text %>
+      </div>
+  </li>
+<% }) %>

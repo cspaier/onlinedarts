@@ -44,6 +44,12 @@ li >.alert{
   padding: 15px 5px 15px 5px;
 }
 
+#chat{
+  height: 200px;
+}
+#messages{
+  overflow-y: scroll;
+}
 /* split.js */
 .split {
   -webkit-box-sizing: border-box;

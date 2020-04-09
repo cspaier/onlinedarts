@@ -19,6 +19,7 @@ var roomTemplates = {
 }
 var homeTemplates = {
   cardRoom: fs.readFileSync(__dirname + '/views/partials/card-room.ejs', 'utf-8'),
+  messages: fs.readFileSync(__dirname + '/views/partials/messages.ejs', 'utf-8'),
 }
 
 var rooms = new Rooms;
@@ -51,6 +52,7 @@ io.on('connection', function(socket){
     var user = chat.createUser(socket.id)
     socket.join('home');
     io.to(socket.id).emit('new-name', user.name)
+    io.to(socket.id).emit('new-message', chat)
     io.to('home').emit('update-names', chat)
     io.to(socket.id).emit('update-rooms', rooms.toClient());
   });
@@ -181,6 +183,7 @@ io.on('connection', function(socket){
 
   socket.on('new-message', function(message){
     chat.newMessage(message, socket.id)
+    io.to('home').emit('new-message', chat)
   });
 
   socket.on('disconnect', function(){

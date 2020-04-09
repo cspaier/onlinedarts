@@ -4,7 +4,10 @@ function Chat(){
 
   this.newMessage = function(messageText, socketId){
     var user = this.getUserById(socketId)
-    var message = {'name': messageText, 'userName':user.name}
+    if (user == undefined){
+      return false
+    }
+    var message = {'text': messageText, 'userName':user.name}
     this.messages.push(message)
     return message
   }
@@ -24,7 +27,7 @@ function Chat(){
   }
 
   this.changeName = function(name, socketId){
-    var user = this.getUserById(2)
+    var user = this.getUserById(socketId)
     if (user == undefined){
       return false
     }
