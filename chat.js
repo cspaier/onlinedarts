@@ -16,9 +16,17 @@ function Chat(){
 
   this.createUser = function(socketId){
     var userNames = this.users.map(u => u.name)
-    var guestNames = ['P. Taylor', 'P. Wright', 'M. van Gerwen', 'R. Cross', 'G. Durrant', 'A. Lewis' ]
+    // guest names are darts champions from https://en.wikipedia.org/wiki/PDC_World_Darts_Championship
+    var guestNames = ['P. Taylor', 'P. Wright', 'M. van Gerwen', 'R. Cross', 'G. Durrant', 'A. Lewis',
+    'M. smith', 'G. Andersen', 'D. Priestley', 'R. Harrington', 'P. Manley', 'K. Shepherd']
+
     guestNames = guestNames.filter(name => !(userNames.includes(name)))
-    var guestName = guestNames[Math.floor(Math.random() * guestNames.length)]
+    // if all guestnames are taken we use guest-n
+    if (guestNames.length == 0){
+      var guestName = 'guest-' + userNames.length
+    } else {
+      var guestName = guestNames[Math.floor(Math.random() * guestNames.length)]
+    }
     var user = new User(guestName, socketId)
     this.users.push(user)
     return user
