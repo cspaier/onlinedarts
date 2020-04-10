@@ -38,6 +38,25 @@ function Room(id, name, password){
 };
 
 class Rooms extends Array {
+
+  populateFromJson(json){
+    if (json != undefined){
+      var jsonRooms = JSON.parse(json)
+      jsonRooms.forEach((jsonRoom) => {
+        var room = new Room(jsonRoom.id, jsonRoom.name, jsonRoom.password)
+        room.jitsiRoom = jsonRoom.jitsiRoom
+        //lastActivity doesn't matter
+        var jsonGame = jsonRoom.game
+        var game = new Game()
+        for (const key in jsonGame) {
+          game[key] = jsonGame[key]
+        }
+        room.game = game
+        this.push(room)
+      })
+    }
+  }
+
   createNewRoom(name, password){
     // create a new room with the given name and password.
     if (this.length > 12){ // limit the number of rooms to 12
