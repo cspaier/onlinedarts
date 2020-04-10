@@ -17,7 +17,8 @@ client.on('error', function (err) {
 var Game = require('./game.js')
 var Rooms = require('./rooms.js')
 var Chat = require('./chat.js')
-
+var rooms = new Rooms
+var chat = new Chat
 
 // On va passer des templates au client
 fs = require('fs')
@@ -56,7 +57,7 @@ app.get('/', function(req, res){
   // clear inactive rooms
   rooms = rooms.cleanInactives()
   save(rooms)
-  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates});
+  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
 });
 
 app.get('/room/:roomId', function(req, res){
