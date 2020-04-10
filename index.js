@@ -6,6 +6,14 @@ app.use(express.static('static/'));
 var ejs = require('ejs');
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+
+// set up readis
+const redis = require("redis");
+var client = redis.createClient();
+client.on('error', function (err) {
+  console.log('Error ' + err);
+});
+
 var Game = require('./game.js')
 var Rooms = require('./rooms.js')
 var Chat = require('./chat.js')
@@ -22,15 +30,33 @@ var homeTemplates = {
   messages: fs.readFileSync(__dirname + '/views/partials/messages.ejs', 'utf-8'),
 }
 
-var rooms = new Rooms;
-var chat = new Chat;
+// save rooms object to redis a json
+var save = function(object){
+  client.set('rooms', JSON.stringify(object));
+}
+
+// get backup on app start
+client.get('rooms',(err, json)=>{
+  if(err){
+    throw err;
+  }
+
+  let port = process.env.PORT;
+  if (port == null || port == "") {
+    port = 8000;
+  }
+  rooms.populateFromJson(json)
+  http.listen(port);
+})
+
 
 // Les vues
 
 app.get('/', function(req, res){
   // clear inactive rooms
   rooms = rooms.cleanInactives()
-  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
+  save(rooms)
+  res.render('home', {rooms: rooms.toClient(), templates: homeTemplates});
 });
 
 app.get('/room/:roomId', function(req, res){
@@ -41,7 +67,6 @@ app.get('/room/:roomId', function(req, res){
     res.render('room', {room:room.toClient(), game: room.game, templates: roomTemplates});
   }
 });
-
 
 // sockets
 
@@ -68,12 +93,11 @@ io.on('connection', function(socket){
     io.to(socket.id).emit('update-game', room.game);
   });
 
-
   socket.on('create-room', function(datas){
-    var room = rooms.createNewRoom(datas.roomName, datas.password)
+    rooms.createNewRoom(datas.roomName, datas.password)
     io.to('home').emit('update-rooms', rooms.toClient());
+    save(rooms)
   });
-
 
   // game things
   // all io.emit will pass game object. This way we are clear game state is always same for all clients
@@ -99,6 +123,7 @@ io.on('connection', function(socket){
     room.game.createPlayer(datas.playerName);
     io.to(room.id).emit('change-players', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
+    save(rooms)
   });
 
   socket.on('remove-player', function(datas){
@@ -109,7 +134,7 @@ io.on('connection', function(socket){
     room.game.removePlayer();
     io.to(room.id).emit('change-players', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
-
+    save(rooms)
   });
 
   socket.on('start-game', function(datas){
@@ -120,6 +145,7 @@ io.on('connection', function(socket){
     room.game.startGame()
     io.to(room.id).emit('update-game', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
+    save(rooms)
   });
 
   socket.on('valide-volee', function(datas){
@@ -143,6 +169,7 @@ io.on('connection', function(socket){
       io.to(room.id).emit('update-game', game);
       io.to('home').emit('update-rooms', rooms.toClient());
     }
+    save(rooms)
   });
 
   socket.on('cancel-volee', function(datas){
@@ -153,6 +180,7 @@ io.on('connection', function(socket){
     room.game.cancelVolee()
     io.to(room.id).emit('update-game', room.game)
     io.to('home').emit('update-rooms', rooms.toClient());
+    save(rooms)
   });
 
   socket.on('new-game', function(datas){
@@ -162,6 +190,7 @@ io.on('connection', function(socket){
     }
     room.game = new Game()
     io.to(room.id).emit('update-game', room.game)
+    save(rooms)
   });
 
   socket.on('jitsi-connect', function(datas){
@@ -191,9 +220,3 @@ io.on('connection', function(socket){
   });
 
 });
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
-http.listen(port);
