@@ -47,6 +47,9 @@ li >.alert{
 #chat{
   height: 200px;
 }
+#chat > .card-group{
+  height: 100%;
+}
 #messages{
   overflow-y: scroll;
 }

@@ -25,6 +25,8 @@ $(function () {
     var template = templates.messages
     var html = ejs.render(template, { messages: chat.messages });
     $('#messages').html(html)
+    $('#messages').scrollTop($('#messages').height())
+
   }
 
   $('#jitsi-connect-button').click(function(){
