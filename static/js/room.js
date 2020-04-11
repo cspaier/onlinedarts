@@ -1,3 +1,5 @@
+var nMessages = 0
+
 var dartsToString = function(darts){
   // affichage d'une voléé. Retourne un string (html)
   html=""
@@ -240,6 +242,15 @@ $(function () {
     alert += '<span class="sr-only">Loading...</span></div>'
     alert += ' Connection au serveur perdue. En attente de reconnection.'
     $('#alert').html(alert)
+  });
+
+  socket.on('new-message',function(message){
+    nMessages += 1
+    var html = '<span class="oi oi-comment-square"></span><span> ' + nMessages + '</span>'
+    var tooltip = nMessages + ' nouveaux messages dans le lobby'
+    $('#chat-indicator').attr('title', tooltip)
+    $('#chat-indicator').html(html)
+    $('#chat-indicator').removeClass('d-none')
   });
 
   var splitobj = Split(["#game-col","#jitsi-container"], {

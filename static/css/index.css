@@ -21,7 +21,7 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 
 .dart-button {
   width:80%;
- font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 #volees > li {
@@ -29,7 +29,7 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
 }
 
 #alert {
-    font-size: 2.5vw;
+  font-size: 2.5vw;
 }
 
 .room-card-footer {
@@ -53,6 +53,12 @@ li >.alert{
 #messages{
   overflow-y: scroll;
 }
+#chat-indicator-container{
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  right: 0;
+}
 /* split.js */
 .split {
   -webkit-box-sizing: border-box;
@@ -75,7 +81,7 @@ li >.alert{
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
 }
 .split.split-horizontal, .gutter.gutter-horizontal {
- /* this should be 100% but it would set the height to 0 in room template.
+  /* this should be 100% but it would set the height to 0 in room template.
   Works in home template. No clue :( */
   height:300px;
   float: left;
