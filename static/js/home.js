@@ -25,7 +25,7 @@ $(function () {
     var template = templates.messages
     var html = ejs.render(template, { messages: chat.messages });
     $('#messages').html(html)
-    $('#messages').scrollTop($('#messages').height())
+    $('#messages').scrollTop($('#messages').prop("scrollHeight"))
 
   }
 
