@@ -7,6 +7,7 @@
           <th><%= player.name %></th>
           <% }); %>
         </tr>
+
       </thead>
       <tbody>
         <% for(var i=0; i < 8; i++) {%>
@@ -25,28 +26,33 @@
         </table>
       </div>
 
-<div class="col">
-  <div class="row no-gutters">
+<div class="col px-0">
+  <div class="row no-gutters my-1">
     <div class="card w-100">
       <canvas id="batonsChart" class="w-100"></canvas>
     </div>
   </div>
 
-  <div class="row no-gutters">
+  <div class="row no-gutters my-1">
     <div class="card w-100">
       <canvas id="dartsChart" class="w-100"></canvas>
     </div>
   </div>
 
-  <div class="row no-gutters">
+  <div class="row no-gutters my-1">
     <div class="card w-100">
       <table class="table table-hover">
         <thead>
           <tr>
-            <td></td>
-            <td><span style="text-decoration:overline">batons</span></td>
-            <td>&Sigma; batons</td>
-            <td>&Sigma; fromages</td>
+            <td>
+            </td>
+            <td>
+              <span style="text-decoration:overline" data-toggle="tooltip" title="Nombre moyen de batons par volée">
+                batons
+              </span>
+          </td>
+            <td><span data-toggle="tooltip" title="Nombre de batons dans la partie">&Sigma; batons</span></td>
+            <td><span data-toggle="tooltip" title="Nombre de volées vides dans la partie">&Sigma; fromages</span></td>
           </tr>
         </thead>
         <tbody>
