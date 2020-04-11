@@ -1,6 +1,6 @@
 var nMessages = 0
 
-var dartsToString = function(darts){
+var dartsToString = function(darts, preview=false){
   // affichage d'une voléé. Retourne un string (html)
   html=""
   if (darts.length == 0){
@@ -16,7 +16,11 @@ var dartsToString = function(darts){
       } else {
         var classList = ['', 'secondary', 'info', 'primary']
       }
-      html += '<span class="badge badge-' + classList[dart.combo] + '">'
+      html += '<span class="badge badge-' + classList[dart.combo]
+      if (preview){
+        html += ' dart- "data'
+      }
+      html +=  '"">'
       html +=  dart.combo + ' × ' + game.scoresList[dart.numeroTape] + '</span>'
     });
   }
@@ -64,8 +68,8 @@ var refresPlayersTable = function(){
     var html = ejs.render(template, { game: game });
     $('#game-col').html(html);
 
-    var activePlayerName = game.activePlayer.name
-    $('.player-'+ activePlayerName + '-cell').addClass('table-active')
+    var activePlayerIndex = game.players.findIndex(player => player == game.activePlayer)
+    $('.player-'+ activePlayerIndex + '-cell').addClass('table-active')
     $('#active-player-name').html(game.activePlayer.name);
   }
   if (game.state == 3){
