@@ -113,6 +113,8 @@ var updateVoleePreview = function(darts){
 }
 
 var DartButtonsclick = function(el){
+  // perd le focus pour que l'utilisateur puisse appuyer sur entrer
+  $(el).blur()
   // le nombre initial de fois qu'il a tapé la zone dans ce volee
   var n_initial = $(el).data("n")
   // le numéro tapé
@@ -190,7 +192,20 @@ $(function () {
   $('#jitsi-connect-button').click(function(){
     socket.emit('jitsi-connect', {roomId: room.id});
   });
+
+  // Pressing return key will validate volée
+
+  $(document).on('keypress',function(e) {
+    if(e.which == 13) {
+      if (game.state == 2){
+        socket.emit('valide-volee', {darts: darts, roomId: room.id});
+        return false;
+      }
+    }
+  });
+
   // socket receiver
+
   socket.on('login', function(gameFromServer){
     game = gameFromServer;
     auth = true;

@@ -214,7 +214,7 @@ io.on('connection', function(socket){
 
   socket.on('new-message', function(message){
     chat.newMessage(message, socket.id)
-    io.to('home').emit('new-message', chat)
+    io.emit('new-message', chat)
   });
 
   socket.on('disconnect', function(){
