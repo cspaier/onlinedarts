@@ -18,8 +18,8 @@
         <th scopre="row">
           <%= game.scoresList[i] %>
        </th>
-        <% game.players.forEach((player) => { %>
-          <td class="player-<%= player.name %>-cell"><%= player.scores[i] %></td>
+        <% game.players.forEach((player, j) => { %>
+          <td class="player-<%= j %>-cell"><%= player.scores[i] %></td>
         <% }); %>
           <% if (i < 6) { %>
             <td class="game-state-2">

@@ -68,7 +68,7 @@ var refresPlayersTable = function(){
     var html = ejs.render(template, { game: game });
     $('#game-col').html(html);
 
-    var activePlayerIndex = game.players.findIndex(player => player == game.activePlayer)
+    var activePlayerIndex = game.players.findIndex(player => player.name == game.activePlayer.name)
     $('.player-'+ activePlayerIndex + '-cell').addClass('table-active')
     $('#active-player-name').html(game.activePlayer.name);
   }
