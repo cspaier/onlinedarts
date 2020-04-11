@@ -194,6 +194,16 @@ io.on('connection', function(socket){
     io.to(room.id).emit('update-game', room.game)
     save(rooms)
   });
+  socket.on('shuffle-players', function(datas){
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    if (!room){
+      return false
+    }
+    room.game.shufflePlayers()
+    io.to(room.id).emit('update-game', room.game)
+    io.to('home').emit('update-rooms', rooms.toClient());
+    save(rooms)
+  });
 
   socket.on('jitsi-connect', function(datas){
     var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)

@@ -195,6 +195,11 @@ $(function () {
     return false;
   });
 
+  $('#shuffle-players').click(function(e){
+    socket.emit('shuffle-players', {roomId: room.id});
+    return false;
+  });
+
   $('#jitsi-connect-button').click(function(){
     socket.emit('jitsi-connect', {roomId: room.id});
   });
