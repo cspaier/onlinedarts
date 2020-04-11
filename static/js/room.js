@@ -52,7 +52,7 @@ var refreshForGameState = function(){
 
 var refresPlayersTable = function(){
   //recharge le tableau principal avec les nouvelles données
-  if (game.state == 0 || game.state == 3){
+  if (game.state == 0 ){
     template = templates.tableState0
     var html = ejs.render(template, { game: game });
     $('#players-table').html(html);
@@ -65,6 +65,15 @@ var refresPlayersTable = function(){
     var activePlayerName = game.activePlayer.name
     $('.player-'+ activePlayerName + '-cell').addClass('table-active')
     $('#active-player-name').html(game.activePlayer.name);
+  }
+  if (game.state == 3){
+    template = templates.tableState3
+    var html = ejs.render(template, { game: game });
+    $('#players-table').html(html);
+    chartFromGame($('#batonsChart'), game, 'batons')
+    chartFromGame($('#dartsChart'), game, 'darts')
+
+
   }
 }
 

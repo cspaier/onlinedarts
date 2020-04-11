@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div class="row no-gutters justify-content">
       <div id="game-col"class="col mx-0">
-        <div id="players-table">
+        <div id="players-table" class="row">
           <%- include('partials/table-state-0',{game:game}); %>
         </div>
       </div>
@@ -135,6 +135,11 @@
   <script src='https://meet.jit.si/external_api.js'></script>
   <script type="text/javascript" src="/js/jitsi-setup.js"></script>
   <script type="text/javascript" src="/js/room.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+  <script type="text/javascript" src="/js/stats.js"></script>
+
+
 
   <script type="text/javascript">
   var templates = <%- JSON.stringify(templates) %>; // Get templates object

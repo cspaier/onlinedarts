@@ -1,0 +1,66 @@
+<div id="scores-table" class="col-auto">
+  <table class="table table-hover table-responsive">
+    <thead>
+      <tr>
+        <th><a href="/"><span class="oi oi-home"></span></a></th>
+        <% game.players.forEach((player) => { %>
+          <th><%= player.name %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < 8; i++) {%>
+          <tr>
+            <th scopre="row">
+              <%= game.scoresList[i] %>
+            </th>
+            <% game.players.forEach((player) => { %>
+              <td><%= player.scores[i] %></td>
+              <% }); %>
+
+            </tr>
+            <% }; %>
+
+          </tbody>
+        </table>
+      </div>
+
+<div class="col">
+  <div class="row no-gutters">
+    <div class="card w-100">
+      <canvas id="batonsChart" class="w-100"></canvas>
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="card w-100">
+      <canvas id="dartsChart" class="w-100"></canvas>
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="card w-100">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <td></td>
+            <td><span style="text-decoration:overline">batons</span></td>
+            <td>&Sigma; batons</td>
+            <td>&Sigma; fromages</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% game.players.forEach((player) => { %>
+            <tr>
+              <td> <%= player.name %></td>
+              <td><%= game.stats[player.name].mBatons %></td>
+              <td><%= game.stats[player.name].tBatons %></td>
+              <td><%= game.stats[player.name].nFromages %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+</div>

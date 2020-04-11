@@ -14,8 +14,8 @@ button:disabled {/* https://github.com/twbs/bootstrap/issues/16088 */
   max-height: 150px;
 }
 
-#players-table {
-  font-size:240%;
+#scores-table {
+  font-size:200%;
   text-align: center;
 }
 

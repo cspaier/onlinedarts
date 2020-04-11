@@ -25,6 +25,7 @@ fs = require('fs')
 var roomTemplates = {
   tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
   tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8'),
+  tableState3: fs.readFileSync(__dirname + '/views/partials/table-state-3.ejs', 'utf-8'),
 }
 var homeTemplates = {
   cardRoom: fs.readFileSync(__dirname + '/views/partials/card-room.ejs', 'utf-8'),
