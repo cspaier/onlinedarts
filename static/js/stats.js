@@ -10,13 +10,12 @@ var chartFromGame = function(el, game, key){
   } else {
     return false
   }
-  console.log(attr)
   var style = getComputedStyle(document.body);
   var colors = [
-    style.getPropertyValue('--primary'),
-    style.getPropertyValue('--secondary'),
-    style.getPropertyValue('--warning'),
-    style.getPropertyValue('--danger'),
+    'rgb(0, 123, 255)',// primary blue
+    'rgb(40, 167, 69)',// success green
+    'rgb(255, 193, 7)',// warning yellow
+    'rgb(220, 53, 69)',// danger red
   ]
 
   // create datasets
@@ -24,14 +23,15 @@ var chartFromGame = function(el, game, key){
   var labelLenght = 0
   game.players.forEach((player, i) => {
     var stat = game.stats[player.name]
-    console.log(stat)
     var color = colors[i]
+    // same color with opacity at 0.5 for background
+    var backgroundColor = color.replace(')', ', 0.3)').replace('rgb', 'rgba')
     datasets.push({
       label: player.name,
       data: stat[attr],
       showLine:true,
-      fill: false,
-      backgroundColor: color,
+      fill: true,
+      backgroundColor: backgroundColor,
       borderColor: color,
     })
     labelLenght = Math.max(labelLenght, stat[attr].length)
@@ -41,6 +41,7 @@ var chartFromGame = function(el, game, key){
 
   var config = {
     responsive: true,
+    maintainAspectRatio: false,
     type: 'line',
     data:{
       labels: labels,
@@ -70,10 +71,19 @@ var chartFromGame = function(el, game, key){
             stepSize:1,
             beginAtZero: true
           }
-        }]
-      }
-    }
-  }
+        }],
+      },
+      tooltips: {
+        mode: 'index',
+        position:'nearest',
+        callbacks: {
+          title: function(tooltipItems, data){
+            return  key + " volée " + tooltipItems[0].label
+          }
+        }//callbacks
+      }// tooltips
+    }//options
+  }//config
 
   var chart = new Chart(el, config);
 }
