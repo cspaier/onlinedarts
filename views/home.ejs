@@ -9,59 +9,62 @@
   <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
-  <div class="container-fluid p-0 m-0">
+  <div class="container-fluid p-0">
     <!-- <div class="row">
     <div class="col text-center">
     <h1>La fièvre du tungstène!</h1>
   </div>
 </div> -->
 
-<div class="row application-container p-0 m-0 no-gutters">
-  <div id="home-col" class="col justify-content-center align-items-center row m-0">
-    <div class="col-10">
-      <ul class="nav nav-tabs" id="roomTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#roomsTab">Liste des salles</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#createRoomTab">Nouvelle salle</a>
-        </li>
+<div class="application-container  row p-0 m-0 no-gutters">
+  <div id="home-col" class="col py-1 px-2 m-0 overflow-auto">
+    <ul class="nav nav-tabs" id="roomTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#roomsTab">Liste des salles</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#createRoomTab">Nouvelle salle</a>
+      </li>
 
-      </ul>
-      <div class="tab-content py-2">
-        <div class="tab-pane fade show active" id="roomsTab">
-          <div id="rooms" class="row">
-          </div>
-        </div>
-        <div class="tab-pane fade " id="createRoomTab">
-          <form  id="create-room" action="#">
-            <div class="form-group mb-2">
-              <input id="new-room-name" autocomplete="off" class="form-control" placeholder="Nom de la salle"/>
-              <input id="new-room-password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
-            </div>
-            <button class="btn btn-primary mb-2">
-              <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
-              Créer une nouvelle salle
-            </button>
-          </form>
+    </ul>
+    <div class="tab-content py-2">
+      <div class="tab-pane fade show active" id="roomsTab">
+        <div id="rooms" class="row mx-0">
         </div>
       </div>
-    </div><!-- col 10-->
-    <div class="col-12 align-self-end mb-2 h-20" id="chat">
-      <%- include('partials/chat',{chat:chat}); %>
+      <div class="tab-pane fade " id="createRoomTab">
+        <form  id="create-room" action="#">
+          <div class="form-group mb-2">
+            <input id="new-room-name" autocomplete="off" class="form-control" placeholder="Nom de la salle"/>
+            <input id="new-room-password" autocomplete="off" class="form-control" placeholder="mot de passe"/>
+          </div>
+          <button class="btn btn-primary mb-2">
+            <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+            Créer une nouvelle salle
+          </button>
+        </form>
+      </div>
     </div>
   </div><!-- homecol -->
+  <div class="w-100 d-inline d-lg-none">
+  </div>
+  <div id="col-home-right" class="col row justify-content-center m-0 px-2">
+    <div id="jitsi-container" class="text-center justify-content-center align-items-center row col-12 jitsi-container m-0 p-0 order-2">
+      <div class="col">
+        <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
+          <span class="oi oi-video" title="plus" aria-hidden="true"></span>
+          Activer la visioconférence.
+        </button>
+      </div>
+    </div>
 
-  <div id="jitsi-container" class="col text-center justify-content-center align-items-center row jitsi-container m-0 p-0">
-    <div class="col">
-      <button id="jitsi-connect-button" class="btn btn-lg btn-primary">
-        <span class="oi oi-video" title="plus" aria-hidden="true"></span>
-        Activer la visioconférence.
-      </button>
+    <div class="row align-self-end py-1 px-0 w-100 col-12 order-1 order-lg-last" id="chat">
+      <%- include('partials/chat',{chat:chat}); %>
     </div>
   </div>
 </div>
-</div>
+
+</div><!-- container-fluid -->
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

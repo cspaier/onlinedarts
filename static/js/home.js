@@ -88,12 +88,17 @@ $(function () {
     updateMessages(chat)
   });
 
-  var splitobj = Split(["#home-col","#jitsi-container"], {
+  var splitobj = Split(["#home-col","#col-home-right"], {
     elementStyle: function (dimension, size, gutterSize) {
       $(window).trigger('resize'); // Optional
       return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
     },
     gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+    gutter: (index, direction) => {
+      const gutter = document.createElement('div')
+      gutter.className = `gutter gutter-${direction} d-none d-lg-block h-100`
+      return gutter
+    },
     sizes: [50,50],
     minSize: 300,
     gutterSize: 10,

@@ -45,7 +45,7 @@ li >.alert{
 }
 
 #chat{
-  height: 200px;
+  height: 25vh;
 }
 #chat > .card-group{
   height: 100%;
@@ -59,6 +59,20 @@ li >.alert{
   top: 0;
   right: 0;
 }
+#home-col{
+  height: 75%;
+  direction: rtl;
+}
+#home-col > * {
+  direction: ltr;
+}
+@media (min-width: 992px) {
+#home-col{
+  height: 100%!important;
+}
+}
+
+
 /* split.js */
 .split {
   -webkit-box-sizing: border-box;
