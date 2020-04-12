@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Onlinedarts - <%= room.name %></title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.11/split.min.js"></script>
   <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
   <link href="/css/index.css" rel="stylesheet">
@@ -106,7 +106,7 @@
               <span class="oi oi-action-undo" title="Annuler" aria-hidden="true"></span>
               <span>Annuler</span>
             </button>
-            <ul id="volees" class="list-group"></ul>
+            <ul id="volees" class="list-group scroll"></ul>
           </div>
           </div>
 
@@ -125,7 +125,7 @@
         </form>
       </div>
       <div class="col-md-6">
-        <div id="alert" class="alert alert-info text-center">
+        <div id="alert" class="alert alert-light text-center">
           <div class="spinner-border text-warning float-left" role="status">
             <span class="sr-only">Loading...</span>
           </div>

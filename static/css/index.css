@@ -63,15 +63,33 @@ li >.alert{
   height: 75%;
   direction: rtl;
 }
+
 #home-col > * {
   direction: ltr;
 }
 @media (min-width: 992px) {
-#home-col{
-  height: 100%!important;
+  #home-col{
+    height: 100%!important;
+  }
 }
+/* thin scrollbars */
+.scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #8f8f8f #c6c6c6;
+}
+.scroll::-webkit-scrollbar {
+    width: 5px;
 }
 
+.scroll::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #c6c6c6;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #8f8f8f;
+}
 
 /* split.js */
 .split {
