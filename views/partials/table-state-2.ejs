@@ -22,19 +22,19 @@
           <td class="player-<%= j %>-cell"><%= player.scores[i] %></td>
         <% }); %>
           <% if (i < 6) { %>
-            <td class="game-state-2">
+            <td class="game-state-2 d-none auth">
               <button onclick="DartButtonsclick(this)" class="dart-button btn btn-secondary" data-n=0 data-combo=1 data-value=<%= i %>>&nbsp;</button>
             </td>
-            <td class="game-state-2">
+            <td class="game-state-2 d-none auth">
               <button onclick="DartButtonsclick(this)" class="dart-button btn btn-info" data-n=0 data-combo=2 data-value=<%= i %>>&nbsp;</button>
             </td>
-            <td class="game-state-2">
+            <td class="game-state-2 d-none auth">
               <button onclick="DartButtonsclick(this)" class="dart-button btn btn-primary" data-n=0 data-combo=3 data-value=<%= i %>>&nbsp;</button>
             </td>
           <% } %>
           <% if (i == 6) { %>
-            <td class="game-state-2"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-success" data-n=0 data-combo=1 data-value=<%= i %>>&nbsp;</button> </td>
-            <td class="game-state-2"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-danger" data-n=0 data-combo=2 data-value=<%= i %>>&nbsp;</button> </td>
+            <td class="game-state-2 d-none auth"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-success" data-n=0 data-combo=1 data-value=<%= i %>>&nbsp;</button> </td>
+            <td class="game-state-2 d-none auth"><button onclick="DartButtonsclick(this)" class="dart-button btn btn-danger" data-n=0 data-combo=2 data-value=<%= i %>>&nbsp;</button> </td>
           <% } %>
 
       </tr>

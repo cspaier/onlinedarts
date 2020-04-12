@@ -28,13 +28,6 @@ var dartsToString = function(darts, preview=false){
 }
 
 var refreshForGameState = function(){
-  // affiche elements en fonction du auth
-  if (auth){
-    $('#login').addClass('d-none')
-    $('.auth').removeClass('d-none')
-  } else {
-    $('.auth').addClass('d-none')
-  }
   // On cache/affiche les élèments en fonction du game_state
   if (game.state == 0){
     $('.game-state-1').addClass('d-none');
@@ -53,6 +46,13 @@ var refreshForGameState = function(){
     $('.game-state-1').addClass('d-none');
     $('.game-state-2').addClass('d-none');
     $('.game-state-3').removeClass('d-none');
+  }
+  // affiche elements en fonction du auth
+  if (auth){
+    $('#login').addClass('d-none')
+    $('.auth').removeClass('d-none')
+  } else {
+    $('.auth').addClass('d-none')
   }
 }
 
@@ -208,7 +208,8 @@ $(function () {
 
   $(document).on('keypress',function(e) {
     if(e.which == 13) {
-      if (game.state == 2){
+      if (game.state == 2 && e.target.id != 'password'){
+      // Le password est le seul input texte de game.state2
         socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       }
