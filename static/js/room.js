@@ -268,8 +268,13 @@ $(function () {
       return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
     },
     gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+    gutter: (index, direction) => {
+      const gutter = document.createElement('div')
+      gutter.className = `gutter gutter-${direction} d-none d-md-block`
+      return gutter
+    },
     sizes: [50,50],
-    minSize: 300,
+    minSize: [300,0],
     gutterSize: 20,
     cursor: 'col-resize'
   });
