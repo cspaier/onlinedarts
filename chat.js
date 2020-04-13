@@ -7,7 +7,7 @@ function Chat(){
     if (user == undefined){
       return false
     }
-    var message = {'text': messageText, 'userName':user.name}
+    var message = {'text': messageText, 'userName':user.name, date: Date.now()}
     this.messages.push(message)
     // keep only last 200 messages
     this.messages = this.messages.slice(-200)

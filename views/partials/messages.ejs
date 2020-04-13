@@ -1,10 +1,26 @@
+<% var today = new Date(Date.now()); var previousDay = today %>
 <% messages.forEach((message) => { %>
-<li class="list-group-item row d-flex no-gutter m-0 p-0">
-  <div class="col-2 alert alert-secondary m-0 p-0">
-    <%= message.userName %>
-    </div>
-    <div class="col-10">
-      <%= message.text %>
+  <% var date = new Date(message.date); %>
+  <% if (date.getDay() != previousDay.getDay()){ %>
+    <li class="list-group-item row d-flex no-gutter m-0 p-0 justify-content-center">
+      <% if date.setHours(0,0,0,0) == today.setHours(0,0,0,0) {%>
+        <span>aujourd'hui</span>
+      <% } else { %>
+        <span> <%= date.toLocaleDateString() %></span>
+      <% } %>
+      </li>
+    <% previousDay = date %>
+  <% } %>
+  <li class="list-group-item row d-flex no-gutter m-0 p-0 align-items-center">
+    <div class="col-auto alert alert-secondary m-0 py-0 h-100 d-flex align-items-center">
+      <span><%= message.userName %></span>
       </div>
+    <div class="col">
+      <%= message.text %>
+    </div>
+    <div class="col-auto">
+    <span><%= date.getHours() %>: <%= date.getMinutes() %> </span>
+
+    </div>
   </li>
 <% }) %>
