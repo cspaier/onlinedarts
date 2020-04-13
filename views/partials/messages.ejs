@@ -4,9 +4,9 @@
   <% if (date.getDay() != previousDay.getDay()){ %>
     <li class="list-group-item row d-flex no-gutter m-0 p-0 justify-content-center">
       <% if (date.setHours(0,0,0,0) == today.setHours(0,0,0,0)) {%>
-        <span>aujourd'hui</span>
+        <span class="text-secondary">aujourd'hui</span>
       <% } else { %>
-        <span> <%= date.toLocaleDateString() %></span>
+        <span class="text-secondary"> <%= date.toLocaleDateString() %></span>
       <% } %>
       </li>
     <% previousDay = date %>
@@ -19,7 +19,7 @@
       <%= message.text %>
     </div>
     <div class="col-auto">
-    <span><%= (date.getHours()<10?'0':'') + date.getHours() %>:<%= (date.getMinutes()<10?'0':'') + date.getMinutes() %> </span>
+    <span class="text-secondary"><%= (date.getHours()<10?'0':'') + date.getHours() %>:<%= (date.getMinutes()<10?'0':'') + date.getMinutes() %> </span>
 
     </div>
   </li>

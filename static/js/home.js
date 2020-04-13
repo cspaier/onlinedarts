@@ -3,6 +3,24 @@ var switchTabs = function(tabName){
 }
 
 $(function () {
+  var newMessages = 0
+  var visible = (document.visibilityState == 'visible')
+  document.addEventListener("visibilitychange", function() {
+    visible = (document.visibilityState == 'visible')
+    if (visible){
+      newMessages = 0
+      updateTitle()
+    }
+  });
+
+  var updateTitle = function(){
+    if (visible){
+      document.title = 'Onlinedarts';
+    } else {
+      document.title = '(' + newMessages + ') Onlinedarts'
+    }
+  }
+
   var updateRooms = function(rooms){
     var template = templates.cardRoom
     var html = ejs.render(template, { rooms: rooms });
@@ -22,8 +40,12 @@ $(function () {
   }
 
   var updateMessages = function(chat){
+    if (!visible){
+      newMessages += 1
+      updateTitle()
+    }
     var template = templates.messages
-    var html = ejs.render(template, { messages: chat.messages });
+    var html = ejs.render(template, { messages: chat.messages});
     $('#messages').html(html)
     $('#messages').scrollTop($('#messages').prop("scrollHeight"))
 
@@ -64,7 +86,6 @@ $(function () {
   $('#change-name').submit(function(e){
     e.preventDefault(); // prevents page reloading
     var name = $('#new-name').val()
-    console.log(name)
     $('#new-name').blur()
     socket.emit('change-name', name)
     return false;
@@ -79,7 +100,6 @@ $(function () {
   });
 
   socket.on('new-name', function(name){
-    console.log('here')
     $('#new-name').val('');
     $('#new-name').attr("placeholder", name)
   });
