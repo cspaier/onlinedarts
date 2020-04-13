@@ -15,6 +15,7 @@ function Chat(){
     // we remove all disconnected sockets from this.users
     this.users = this.users.filter(u => u.id in sockets)
   }
+  
   this.newMessage = function(messageText, socketId){
     var user = this.getUserById(socketId)
     if (user == undefined){

@@ -3,7 +3,36 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 app.use(express.static('static/'));
+//sessions settings
+var session = require("express-session")({
+    secret: "my-secret",
+    resave: true,
+    saveUninitialized: true
+});
+var sharedsession = require("express-socket.io-session");
+
+// Use express-session middleware for express
+app.use(session);
+// Use shared session middleware for socket.io
+// setting autoSave:true
+io.use(sharedsession(session, {
+    autoSave:true
+}));
+
+//templates settings
 var ejs = require('ejs');
+// On va passer des templates au client
+fs = require('fs')
+var roomTemplates = {
+  tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
+  tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8'),
+  tableState3: fs.readFileSync(__dirname + '/views/partials/table-state-3.ejs', 'utf-8'),
+}
+var homeTemplates = {
+  cardRoom: fs.readFileSync(__dirname + '/views/partials/card-room.ejs', 'utf-8'),
+  messages: fs.readFileSync(__dirname + '/views/partials/messages.ejs', 'utf-8'),
+}
+
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -20,17 +49,7 @@ var Chat = require('./chat.js')
 var rooms = new Rooms
 var chat = new Chat
 
-// On va passer des templates au client
-fs = require('fs')
-var roomTemplates = {
-  tableState0: fs.readFileSync(__dirname + '/views/partials/table-state-0.ejs', 'utf-8'),
-  tableState2: fs.readFileSync(__dirname + '/views/partials/table-state-2.ejs', 'utf-8'),
-  tableState3: fs.readFileSync(__dirname + '/views/partials/table-state-3.ejs', 'utf-8'),
-}
-var homeTemplates = {
-  cardRoom: fs.readFileSync(__dirname + '/views/partials/card-room.ejs', 'utf-8'),
-  messages: fs.readFileSync(__dirname + '/views/partials/messages.ejs', 'utf-8'),
-}
+
 
 // save rooms object to redis as json
 var saveRooms = function(rooms){
@@ -64,6 +83,7 @@ app.get('/', function(req, res){
   rooms = rooms.cleanInactives()
   // clean disconnected users from chat
   chat.cleanUsers(io.sockets.clients().connected)
+  console.log(io.sockets.clients().connected)
   saveRooms(rooms)
   res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
 });
@@ -83,7 +103,7 @@ io.on('connection', function(socket){
 
   // connection to home
   socket.on('join-home', function(){
-    var user = chat.createUser(socket.id)
+    var user = chat.createUser(socket.handshake.session.id)
     socket.join('home');
     io.to(socket.id).emit('new-name', user.name)
     io.to(socket.id).emit('new-message', chat)
@@ -117,7 +137,7 @@ io.on('connection', function(socket){
     }
     // clean sockets list
     room.cleanSockets(io.sockets.clients().connected);
-    if (room.login(datas.password, socket.id)){
+    if (room.login(datas.password, socket.handshake.session.id)){
       // login successfull
       io.to(socket.id).emit('login', room.game);
     }
@@ -125,7 +145,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('new-player', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -136,7 +156,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('remove-player', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -147,7 +167,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('start-game', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -158,7 +178,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('valide-volee', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -182,7 +202,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('cancel-volee', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -193,7 +213,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('new-game', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -202,7 +222,7 @@ io.on('connection', function(socket){
     saveRooms(rooms)
   });
   socket.on('shuffle-players', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -213,7 +233,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('jitsi-connect', function(datas){
-    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
+    var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.handshake.session.id)
     if (!room){
       return false
     }
@@ -223,7 +243,8 @@ io.on('connection', function(socket){
 
   // Chat events
   socket.on('change-name', function(name){
-    if (chat.changeName(name, socket.id)){
+    if (chat.changeName(name, socket.handshake.session.id)){
+      socket.handshake.session.userName = name
       io.to(socket.id).emit('new-name', name);
       io.to('home').emit('update-names', chat);
       saveChat(chat);
@@ -231,13 +252,13 @@ io.on('connection', function(socket){
   });
 
   socket.on('new-message', function(message){
-    chat.newMessage(message, socket.id)
+    chat.newMessage(message, socket.handshake.session.id)
     io.emit('new-message', chat)
     saveChat(chat);
   });
 
   socket.on('disconnect', function(){
-    chat.removeUser(socket.id)
+    chat.removeUser(socket.handshake.session.id)
     io.to('home').emit('update-names', chat);
     saveChat(chat);
   });
