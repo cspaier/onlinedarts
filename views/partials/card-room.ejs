@@ -1,5 +1,5 @@
 <% if (rooms.length == 0){ %>
-  <div class="alert">
+  <div>
     Aucune salle pour l'instant.
     Peut-être souhaitez vous en <a href="#" onclick="switchTabs('createRoomTab')">créer une</a>?
   </div>
@@ -26,7 +26,7 @@
                 <tbody>
                   <% for(var i=0; i < 8; i++) {%>
                     <tr>
-                      <th scopre="row">
+                      <th scope="row">
                         <%= room.game.scoresList[i] %>
                       </th>
                       <% room.game.players.forEach((player) => { %>
