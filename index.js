@@ -32,13 +32,17 @@ var homeTemplates = {
   messages: fs.readFileSync(__dirname + '/views/partials/messages.ejs', 'utf-8'),
 }
 
-// save rooms object to redis a json
-var save = function(object){
-  client.set('rooms', JSON.stringify(object));
+// save rooms object to redis as json
+var saveRooms = function(rooms){
+  client.set('rooms', JSON.stringify(rooms));
+}
+// save chat object to redis as json
+var saveChat = function(object){
+  client.set('chat', JSON.stringify(chat));
 }
 
 // get backup on app start
-client.get('rooms',(err, json)=>{
+client.mget(['rooms', 'chat'], (err, results)=>{
   if(err){
     throw err;
   }
@@ -47,7 +51,8 @@ client.get('rooms',(err, json)=>{
   if (port == null || port == "") {
     port = 8000;
   }
-  rooms.populateFromJson(json)
+  chat.populateFromJson(results[1])
+  rooms.populateFromJson(results[0])
   http.listen(port);
 })
 
@@ -57,7 +62,9 @@ client.get('rooms',(err, json)=>{
 app.get('/', function(req, res){
   // clear inactive rooms
   rooms = rooms.cleanInactives()
-  save(rooms)
+  // clean disconnected users from chat
+  chat.cleanUsers(io.sockets.clients().connected)
+  saveRooms(rooms)
   res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
 });
 
@@ -98,7 +105,7 @@ io.on('connection', function(socket){
   socket.on('create-room', function(datas){
     rooms.createNewRoom(datas.roomName, datas.password)
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   // game things
@@ -125,7 +132,7 @@ io.on('connection', function(socket){
     room.game.createPlayer(datas.playerName);
     io.to(room.id).emit('change-players', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('remove-player', function(datas){
@@ -136,7 +143,7 @@ io.on('connection', function(socket){
     room.game.removePlayer();
     io.to(room.id).emit('change-players', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('start-game', function(datas){
@@ -147,7 +154,7 @@ io.on('connection', function(socket){
     room.game.startGame()
     io.to(room.id).emit('update-game', room.game);
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('valide-volee', function(datas){
@@ -171,7 +178,7 @@ io.on('connection', function(socket){
       io.to(room.id).emit('update-game', game);
       io.to('home').emit('update-rooms', rooms.toClient());
     }
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('cancel-volee', function(datas){
@@ -182,7 +189,7 @@ io.on('connection', function(socket){
     room.game.cancelVolee()
     io.to(room.id).emit('update-game', room.game)
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('new-game', function(datas){
@@ -192,7 +199,7 @@ io.on('connection', function(socket){
     }
     room.game = new Game()
     io.to(room.id).emit('update-game', room.game)
-    save(rooms)
+    saveRooms(rooms)
   });
   socket.on('shuffle-players', function(datas){
     var room = rooms.getRoomAndCheckAuth(datas.roomId, socket.id)
@@ -202,7 +209,7 @@ io.on('connection', function(socket){
     room.game.shufflePlayers()
     io.to(room.id).emit('update-game', room.game)
     io.to('home').emit('update-rooms', rooms.toClient());
-    save(rooms)
+    saveRooms(rooms)
   });
 
   socket.on('jitsi-connect', function(datas){
@@ -219,16 +226,20 @@ io.on('connection', function(socket){
     if (chat.changeName(name, socket.id)){
       io.to(socket.id).emit('new-name', name);
       io.to('home').emit('update-names', chat);
+      saveChat(chat);
     }
   });
 
   socket.on('new-message', function(message){
     chat.newMessage(message, socket.id)
     io.emit('new-message', chat)
+    saveChat(chat);
   });
 
   socket.on('disconnect', function(){
     chat.removeUser(socket.id)
+    io.to('home').emit('update-names', chat);
+    saveChat(chat);
   });
 
 });

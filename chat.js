@@ -2,6 +2,19 @@ function Chat(){
   this.users = []
   this.messages = []
 
+  this.populateFromJson = function(json){
+    if (json != undefined){
+      var jsonChat = JSON.parse(json)
+      this.users = jsonChat.users
+      this.messages = jsonChat.messages
+    }
+  }
+
+  this.cleanUsers = function(sockets){
+    // sockets is the list of connected sockets (auth or not)
+    // we remove all disconnected sockets from this.users
+    this.users = this.users.filter(u => u.id in sockets)
+  }
   this.newMessage = function(messageText, socketId){
     var user = this.getUserById(socketId)
     if (user == undefined){
