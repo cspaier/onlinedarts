@@ -3,7 +3,7 @@
   <% var date = new Date(message.date); %>
   <% if (date.getDay() != previousDay.getDay()){ %>
     <li class="list-group-item row d-flex no-gutter m-0 p-0 justify-content-center">
-      <% if (date.setHours(0,0,0,0) == today.setHours(0,0,0,0)) {%>
+      <% if (date.getDay() == today.getDay() && date.getMonth() == today.getMonth()) {%>
         <span class="text-secondary">aujourd'hui</span>
       <% } else { %>
         <span class="text-secondary"> <%= date.toLocaleDateString() %></span>
