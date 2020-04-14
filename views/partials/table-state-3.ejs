@@ -16,8 +16,8 @@
             <th scope="row">
               <%= game.scoresList[i] %>
             </th>
-            <% game.players.forEach((player) => { %>
-              <td><%= player.scores[i] %></td>
+            <% game.players.forEach((player, j) => { %>
+              <td class="player-cell-<%= j %> score-<%= i %>"><%= player.scores[i] %></td>
               <% }); %>
 
             </tr>
@@ -27,21 +27,31 @@
         </table>
       </div>
 
-<div class="col px-0">
-  <div class="row no-gutters my-1">
-    <div class="card w-100">
-      <canvas id="batonsChart" class="w-100"></canvas>
+<div class="col px-0 d-flex flex-column">
+  <div class="row no-gutters mt-1 align-items-stretch flex-grow-1">
+    <div class="col-1"></div>
+    <div class="col-10 d-flex flex-column">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-chart="batons" data-toggle="tab" href="#">Batons par volée</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-chart="darts" data-toggle="tab" href="#">Darts par volée</a>
+      </li>
+    </ul>
+      <div class="w-100 flex-grow-1"  style="position: relative;">
+        <canvas id="chart-canvas" class=""></canvas>
     </div>
   </div>
+    <div class="col-1"></div>
 
-  <div class="row no-gutters my-1">
-    <div class="card w-100">
-      <canvas id="dartsChart" class="w-100"></canvas>
-    </div>
   </div>
 
-  <div class="row no-gutters my-1">
+
+
+  <div class="row no-gutters mb-3">
     <div class="card w-100">
+      <div class="table-responsive">
       <table class="table table-hover">
         <thead>
           <tr>
@@ -68,6 +78,8 @@
           </tbody>
         </table>
       </div>
+      </div>
+
     </div>
 
 </div>

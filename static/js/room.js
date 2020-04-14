@@ -1,4 +1,32 @@
 var nMessages = 0
+var chart = undefined
+
+
+var setHistory = function(turn){
+  // Set the history to a turn in the game
+  // Mind that a turn consist of each player throwing a volée
+  var nPlayers = game.players.length
+  var firstIndex = nPlayers * (turn - 1)
+  var lastIndex = Math.min(firstIndex + nPlayers - 1, game.volees.length)
+  var turnVolees = game.volees.slice(firstIndex , lastIndex + 1)// slice exlude last index!
+  //update players scores
+  turnVolees.forEach((volee, i) => {
+    var playerCells = $('.player-cell-' + i)
+    volee.previousScores.forEach((score, j) => {
+      playerCells.filter('.score-' + j).html(score)
+    });
+  });
+  //highlight matching volees in history
+  $('.volee').removeClass('list-group-item-secondary')
+  for(var i=firstIndex; i < lastIndex + 1; i++) {
+    $('.round-' + i).addClass('list-group-item-secondary')
+  }
+  // and scroll
+  $('#volees').scrollTop(
+    $('.round-' + firstIndex).offset().top - $('#volees').offset().top + $('#volees').scrollTop() - ($('#volees').height()/2)
+  );
+
+}
 
 var dartsToString = function(darts, preview=false){
   // affichage d'une voléé. Retourne un string (html)
@@ -76,10 +104,11 @@ var refresPlayersTable = function(){
     template = templates.tableState3
     var html = ejs.render(template, { game: game });
     $('#game-col').html(html);
-    chartFromGame($('#batonsChart'), game, 'batons')
-    chartFromGame($('#dartsChart'), game, 'darts')
-
-
+    chart = chartFromGame($('#chart-canvas'), game, 'batons')
+    $('.nav-link').click(function(e){
+      chart.destroy()
+      chart = chartFromGame($('#chart-canvas'), game, $(e.target).data('chart'))
+    });
   }
 }
 
@@ -88,7 +117,8 @@ var refreshVolees = function(){
   for (var i = game.volees.length - 1; i >= 0; i--) {
     var v = game.volees[i]
     var round = i + 1
-    html += '<li class="list-group-item"><span class="alert alert-secondary">' + round + '</span> <b>' + v.playerName + '</b>: ';
+    html += '<li class="list-group-item volee round-' + i + '"><span class="alert alert-secondary">';
+    html +=  round + '</span> <b>' + v.playerName + '</b>: ';
     html += dartsToString(v.darts)
     html +='</li>'
   }
@@ -209,7 +239,7 @@ $(function () {
   $(document).on('keypress',function(e) {
     if(e.which == 13) {
       if (game.state == 2 && e.target.id != 'password'){
-      // Le password est le seul input texte de game.state2
+        // Le password est le seul input texte de game.state2
         socket.emit('valide-volee', {darts: darts, roomId: room.id});
         return false;
       }
@@ -275,8 +305,8 @@ $(function () {
       return gutter
     },
     sizes: [50,50],
-    minSize: [300,0],
+    minSize: [500,0],
     gutterSize: 20,
-    cursor: 'col-resize'
+    cursor: 'col-resize',
   });
 });
