@@ -40,17 +40,16 @@ var chartFromGame = function(el, game, key){
   var labels = Array.from(Array(labelLenght).keys(), x => (x + 1).toString())
 
   var config = {
-    responsive: true,
-    maintainAspectRatio: false,
     type: 'line',
     data:{
       labels: labels,
       datasets: datasets
     },
     options: {
-      responsive: false,
+      responsive: true,
+      maintainAspectRatio: false,
       title: {
-        display: true,
+        display: false,
         text: key + ' par volée'
       },
       scales: {
@@ -81,9 +80,20 @@ var chartFromGame = function(el, game, key){
             return  key + " volée " + tooltipItems[0].label
           }
         }//callbacks
-      }// tooltips
+      },// tooltips
+      onHover: function(c,i) {
+        // https://stackoverflow.com/questions/37122484/chart-js-bar-chart-click-events
+        if (i.length == 0){
+          return
+        }
+        e = i[0];
+        var x = this.data.labels[e._index];
+        //var y_value = this.data.datasets[0].data[e._index];
+        setHistory(x)
+      },
     }//options
   }//config
 
   var chart = new Chart(el, config);
+  return chart
 }
