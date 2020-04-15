@@ -2,22 +2,29 @@ var express=require('express');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+const session = require('express-session')
 app.use(express.static('static/'));
-//sessions settings
-var session = require("express-session")({
-    secret: "my-secret",
-    resave: true,
-    saveUninitialized: true
+// set up readis
+const redis = require("redis");
+var redisClient = redis.createClient();
+redisClient.on('error', function (err) {
+  console.log('Error ' + err);
 });
+//sessions settings
+let RedisStore = require('connect-redis')(session)
+var appSession = session({
+  store: new RedisStore({ client: redisClient }),
+  secret: "my-secret",
+  resave: false,
+  saveUninitialized: true
+});
+app.use(appSession)
+
+// Use shared session middleware for socket.io
 var sharedsession = require("express-socket.io-session");
 
-// Use express-session middleware for express
-app.use(session);
-// Use shared session middleware for socket.io
 // setting autoSave:true
-io.use(sharedsession(session, {
-    autoSave:true
-}));
+io.use(sharedsession(appSession, {autoSave:true}));
 
 //templates settings
 var ejs = require('ejs');
@@ -36,12 +43,7 @@ var homeTemplates = {
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
-// set up readis
-const redis = require("redis");
-var client = redis.createClient();
-client.on('error', function (err) {
-  console.log('Error ' + err);
-});
+
 
 var Game = require('./game.js')
 var Rooms = require('./rooms.js')
@@ -53,15 +55,15 @@ var chat = new Chat
 
 // save rooms object to redis as json
 var saveRooms = function(rooms){
-  client.set('rooms', JSON.stringify(rooms));
+  redisClient.set('rooms', JSON.stringify(rooms));
 }
 // save chat object to redis as json
 var saveChat = function(object){
-  client.set('chat', JSON.stringify(chat));
+  redisClient.set('chat', JSON.stringify(chat));
 }
 
 // get backup on app start
-client.mget(['rooms', 'chat'], (err, results)=>{
+redisClient.mget(['rooms', 'chat'], (err, results)=>{
   if(err){
     throw err;
   }
@@ -83,7 +85,6 @@ app.get('/', function(req, res){
   rooms = rooms.cleanInactives()
   // clean disconnected users from chat
   chat.cleanUsers(io.sockets.clients().connected)
-  console.log(io.sockets.clients().connected)
   saveRooms(rooms)
   res.render('home', {rooms: rooms.toClient(), templates: homeTemplates, chat: chat});
 });
@@ -103,9 +104,9 @@ io.on('connection', function(socket){
 
   // connection to home
   socket.on('join-home', function(){
-    var user = chat.createUser(socket.handshake.session.id)
+    var userName = chat.createUser(socket.handshake.session)
     socket.join('home');
-    io.to(socket.id).emit('new-name', user.name)
+    io.to(socket.id).emit('new-name', userName)
     io.to(socket.id).emit('new-message', chat)
     io.to('home').emit('update-names', chat)
     io.to(socket.id).emit('update-rooms', rooms.toClient());
@@ -243,8 +244,7 @@ io.on('connection', function(socket){
 
   // Chat events
   socket.on('change-name', function(name){
-    if (chat.changeName(name, socket.handshake.session.id)){
-      socket.handshake.session.userName = name
+    if (chat.changeName(name, socket.handshake.session)){
       io.to(socket.id).emit('new-name', name);
       io.to('home').emit('update-names', chat);
       saveChat(chat);
